@@ -1,0 +1,79 @@
+= jv-unix-env
+
+Configures a unix environment (shell, emacs, etc.)
+
+This is really just a collection of personal files, but it's nice to have a central location
+to check them into, and plus, people have occasionally asked to see my environmen files, so,
+here they are.  I really don't expect anyone to ever clone this repository, but, hey, feel free.
+
+
+== .nscr
+
+Shell configuration files are, of course, written in the language of the Bourne shell.  Such files may
+typically have a `.sh` extension.  But, the configuration files are not shell scripts.  Shell scripts launch a
+separate shell, and any changes made are to _that_ shell, and have no effect on the spawning shell.  These
+files must be sourced (using the `source` or `.` commands), and not "run".  To indicate this, I've "invented"
+the `nscr` suffix -- meaning, "not a script".  The suffix actually doesn't matter; the files could be `.txt`,
+or `.sh`, or no suffix, whatever, and it would be fine.  The `.` command doesn't care.  Nevertheless, I like to
+have a suffix that communicates what type of file it is.
+
+
+== Bourne style
+
+In if/then constructs, I prefer to put the `then` on its own line.  I'm well aware you can use a
+semicolon, I just don't like that style.  All Bourne-type-shell scripts in jv-scripts should use a
+`/bin/bash` shebang line.  I generally use curly braces for variable reads (`${foo}`) unless the
+variable is surrounded by whitespace on both sides, and sometimes even then, if surrounding context
+has used the variable with the curly braces.
+
+I make frequent use of the underused `[ -z` (zero) and `[ -n` (nonzero) options, which are great for
+telling you if a value has been supplied or not.
+
+I still use backquotes instead of the `$(command)` syntax, because, well, a command is not a variable,
+and if you're doing `$(command1 $(command2))`, you might be getting a little too complex for a shell
+script.  Or not.  But I like the backquotes.
+
+=== Exit status
+
+Even though I never use them, I like to make different error conditions exit with different return
+values.  We've got so many values to choose from, why always `exit 1`?
+
+
+== Mods and dups
+
+Often I'm working on a file, and I've made some change, and I want to keep that change.  But I also
+need to move it out of the way.  (Usually, this is because the file is under version control, and I
+don't want to check in the change yet; but, there could be other reasons.)  And so, I move it out
+of the way.
+
+I (not uniquely) refer to these files as "mods" ("modified files").  I also tend to work on multiple
+computers, including Windows and non-Windows.  Then, sometimes, I try to unify mods from different
+machines.  This sometimes produces newline differences.  And it often produces multiple mods of the
+same file.
+
+Sometimes, those mods are identical; sometimes, identical modulo whitespace.
+
+Git helps enormously with these sorts of issues.  But I still have many files from before I used
+git, and I still don't like `git stash` as much as I like moving the file out of the way, unless
+I'm pretty sure I'm going to pop the stash before I would modify any of the related files again.
+If there's any chance of a conflict, I prefer to have the actual files to deal with, and not
+patches or a conflict file.
+
+So, a lot of my scripts, functions, and aliases deal with mods, dups, and whitespace.
+
+
+== File modification time
+
+The file modification time is an attribute of the file in the file system, and can be set
+easily and arbitrarily by any program that has write permission on the file.
+
+To do so may seem like heresy to some, or at least, unwise.  But as I mentioned, I have older
+files, and sometimes, at least for a while, I want to preserve it as an older file.  And yet,
+I want to make trivial changes to it -- again, whitespace, newlines, or perhaps the removal
+of certain blocks.  I want to keep it documented that the text in this file was written on
+(or before) a particular date, but there's other text in the file that I just don't need.
+
+So, I remove the text I don't need, and reset the file modification date to what it had been.
+I have a few things to help me with that.  This has the possibility of confusing certain things
+that look at file modification time to see if a file has changed, but I don't rely on those
+things.
