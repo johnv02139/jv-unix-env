@@ -1,0 +1,25 @@
+# -*- Mode: sh -*-
+#
+# This file (init-bash.nscr) can be copied into a bash init file.  If bash is
+# started with -login, then making this file be ~/.bash_profile should be all
+# which is necessary.  If bash is also started without -login, then ~/.bashrc
+# might also be necessary.
+#
+# These files are, of course, written in the language of the Bourne shell.
+# Such files may typically have a .sh extension.  But, these are not shell scripts.
+# Shell scripts launch a separate shell, and any changes made are to *that* shell,
+# and have no effect on the spawning shell.  These files must be sourced (using the
+# "source" or "." commands), and not "run".
+#
+# To indicate this, I've "invented" the nscr suffix -- "not a script".  The suffix
+# really doesn't matter; they could be .txt, or .sh, or no suffix, whatever, and
+# it would be fine.  The "." command doesn't care.  Nevertheless, I like to have
+# a suffix that communicates what type of file it is.
+
+# After copying this file, personalize this to where you want to keep your files.
+# The all-caps string below is meant to allow easy substitution via sed.
+export JV_ENV_HOME="JVCFGHME"
+
+# Don't edit this line; edit JV_ENV_HOME!  We will want to know the value of
+# JV_ENV_HOME for the later files we're sourcing.
+. ${JV_ENV_HOME}/bash/bashrc.nscr

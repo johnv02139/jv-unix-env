@@ -1,0 +1,195 @@
+# -*- Mode: sh -*-
+#
+# platforms.nscr
+#
+# Personal platform-dependent options
+
+# This file is a bit of a remnant of a bygone era, where I would be logging into
+# multiple different flavors of Unix on a given day.  At this point, the only
+# distinction really is between Windows and non-Windows.  I usually set MACHINE
+# earlier, in .bashrc or in location.nscr, but if necessary this file can figure
+# it out.
+
+if [ -x /bin/uname ]; then
+    os_uname=`/bin/uname`
+elif [ -x /usr/bin/uname ]; then
+    os_uname=`/usr/bin/uname`
+else
+    os_uname=Linux
+fi
+
+# Overridable environment variables
+#   Variables which are truly platform-independent should be defined
+#   in bashrc.nscr.  Those which are completely machine-dependent should
+#   be in location.nscr.  For those which have a default, but should be
+#   overridable, put them here.
+
+export EDITOR="/usr/bin/emacs -nw"
+export VISUAL="/usr/bin/emacs -nw"
+export ALTERNATE_EDITOR="/usr/bin/emacs -nw -q"
+
+
+# Again, the real distinction is Windows vs. non-Windows, but within Windows,
+# there are three options I've used regularly.
+#   (1) MinGW - http://www.mingw.org/ - Minimalist GNU for Windows
+#       Git Bash - https://git-scm.com/downloads - a version of MinGW
+#   (2) Cygwin - https://www.cygwin.com/
+#   (3) Windows Services For Unix, aka SFU, aka Interix
+#         https://technet.microsoft.com/en-us/library/bb463204.aspx
+
+# They all provide some method of referring to files in a Unixy way, not
+# just meaning forward slashes, but presenting all drives as a single
+# filesystem.  But they all do it differently.  And when running a native
+# Windows program (like, say, java.exe) from one of these shells, it will
+# expect arguments, environment variables, etc., to be in standard Windows
+# format.  So, we try to figure out just what we're running, and be able
+# to convert back to Windows-style paths on demand.
+
+case "$os_uname" in
+  *MINGW32*)
+    # Actually, mingw systems should have MSYSTEM set by default,
+    # but just to be sure, and to set MACHINE, as well
+    MSYSTEM=MINGW32
+    MACHINE=windows
+    ;;
+  *CYGWIN*)
+    MSYSTEM=CYGWIN
+    MACHINE=windows
+    ;;
+  *Interix*)
+    MSYSTEM=INTERIX
+    MACHINE=windows
+    ;;
+  *Darwin*)
+    MSYSTEM=DARWIN
+    MACHINE=macos
+    ;;
+  *)
+    MSYSTEM=LINUX
+    MACHINE=linux
+    ;;
+esac
+export MSYSTEM
+
+if [ -z "$MACHINE" ]; then
+  if [ -x /usr/local/bin/machine ]; then
+    MACHINE=`/usr/local/bin/machine`
+  else
+    MACHINE=linux
+  fi
+fi
+export MACHINE
+
+# Convert from Windows-style path, to the particular Unix-style path used
+# by the implementation of bash.
+function win2unixpath
+{
+  thepath=$1
+  thepath=${thepath:="."}
+
+  if [ "$MSYSTEM" = "MINGW32" ]; then
+    if [ -d "${thepath}" ]
+    then
+      pushd ${thepath} > /dev/null 2>&1
+      rval=`pwd -P`
+      popd > /dev/null 2>&1
+      echo $rval
+    else
+      echo "."
+    fi
+  elif [ "$MSYSTEM" = "INTERIX" ]; then
+    ntpath2posix $thepath
+  elif [ "$MSYSTEM" = "CYGWIN" ]; then
+    /usr/bin/cygpath -u $thepath
+  else
+    echo $thepath
+  fi
+}
+
+# Convert from the particular Unix-style path used by the implementation
+# of bash, to the Windows-style path.
+function unix2winpath
+{
+  thepath=$1
+  thepath=${thepath:="."}
+
+  if [ "$MSYSTEM" = "MINGW32" ]; then
+    if [ -d "${thepath}" ]
+    then
+      pushd ${thepath} > /dev/null 2>&1
+      rval=`pwd -W`
+      popd > /dev/null 2>&1
+      echo $rval
+    else
+      echo "C:/"
+    fi
+  elif [ "$MSYSTEM" = "INTERIX" ]; then
+    posixpath2nt $thepath
+  elif [ "$MSYSTEM" = "CYGWIN" ]; then
+    /usr/bin/cygpath -w $thepath
+  else
+    echo $thepath
+  fi
+}
+
+# Sometimes the shells don't search my path right, or don't recognize shell
+# scripts, or some other problem. Make aliases for all scripts in personal
+# scripts directory, so it doesn't rely on normal path-searching.
+if [ "$MACHINE" = "windows" ]; then
+  if [ -d ${JVSCRIPTS}/. ]; then
+    pushd ${JVSCRIPTS} > /dev/null 2>&1
+    for script in [a-z]*
+    do
+      alias ${script}=${JVSCRIPTS}/$script
+    done
+    popd > /dev/null 2>&1
+  fi
+fi
+
+# Try to have both variables, TMP and TEMP, set.  If I've apparently
+# given them different, valid values, fine, but if one of them is
+# good and the other isn't, use the good value for both.
+if [ -n "${TMP}" -a -d "${TMP}" -a -w "${TMP}" ]
+then
+  if [ -z "${TEMP}" -o ! -d "${TEMP}" -o ! -w "${TEMP}" ]
+  then
+    TEMP=${TMP}
+  fi
+elif [ -n "${TEMP}" -a -d "${TEMP}" -a -w "${TEMP}" ]
+then
+  TMP=${TEMP}
+elif [ -n "${TMP}" -a ! -e "${TMP}" ]
+then
+  # TMP was set to a value, and that value doesn't exist on the filesytem.
+  # Maybe we can create it.
+  if /bin/mkdir -p ${TMP} > /dev/null 2>&1
+  then
+    # successfully created!
+    TEMP=${TMP}
+  fi
+elif [ -n "${TEMP}" -a ! -e "${TEMP}" ]
+then
+  # TEMP was set to a value, and that value doesn't exist on the filesytem.
+  # Maybe we can create it.
+  if /bin/mkdir -p ${TEMP} > /dev/null 2>&1
+  then
+    # successfully created!
+    TMP=${TEMP}
+  fi
+elif [ -w /tmp ]
+then
+  TMP=/tmp
+  TEMP=/tmp
+else
+  echo "warning: unable to find valid value for TMP and TEMP; using HOME dir"
+  TMP=${HOME}
+  TEMP=${HOME}
+fi
+
+# Override on demand
+if [ -n "${EMACSHOME}" -a -x "${EMACSHOME}/bin/emacs.exe" ]
+then
+  export EDITOR="${EMACSHOME}/bin/emacs.exe -nw"
+  export VISUAL="${EMACSHOME}/bin/emacs.exe -nw"
+  export ALTERNATE_EDITOR="${EMACSHOME}/bin/emacs.exe -nw -q"
+fi

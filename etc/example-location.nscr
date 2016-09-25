@@ -1,0 +1,35 @@
+# -*- Mode: sh -*-
+
+# The file ${JV_ENV_HOME}/bash/location.nscr is intended to contain override
+# information for machine-specific settings.  It is listed in .gitignore, and
+# is not intended to be checked in.  This file -- which, in its checked-in
+# location, is never read -- is intended as a template for creating a machine
+# specific one.
+
+# Example: check the hostname to set a variable.
+if [ "$hostname" = "host1" ]
+then
+  # This environment variable is used by jv-scripts/move-mods
+  export MODS_DIR=${HOME}/Documents/Mods
+
+  # These variables are used by specific programs
+  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home
+  export VISUAL='/usr/bin/emacs'
+  export EDITOR='/usr/bin/emacs'
+  export ALTERNATE_EDITOR='/usr/bin/emacs -q'
+
+  # These will be picked up and used in path.nscr, if they're set
+  export ANT_HOME=/Users/jv/Library/JavaLibs/apache-ant-1.9.6
+  export GOLANG_HOME=/usr/local/go
+fi
+
+# You can use -o ("or"), either if a given machine might return different
+# values for hostname, or because you want to set the same value on different
+# machines
+if [ "$hostname" = "host2" -o "$hostname" = "hostname2" -o "$hostname" = "h2" ]
+then
+  # This is used on Windows in path.nscr.  On Unix (including OS X), we assume
+  # emacs will be in /usr/bin
+  export EMACSHOME=/usr/local/emacs-24.1
+fi
+

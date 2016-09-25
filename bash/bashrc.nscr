@@ -1,0 +1,90 @@
+# -*- Mode: sh -*-
+#
+# bashrc.nscr
+#
+# Personal .bashrc for various systems
+#
+# This file establishes several environment variables and sources the following
+# files from JV_ENV_HOME/bash:
+#
+#    location.nscr platforms.nscr path.nscr functions.nscr
+
+# I have sometimes logged in to systems where I have no home dir, or, more likely,
+# where the directory designated as my home dir doesn't exist.  If that's the case,
+# Then it's actually pretty unlikely that I'd be accessing these files, so, umm...
+# But just in case, let's try.
+if [ -z "$HOME" -o ! -w "$HOME" ]
+then
+  if [ -n "$JV_ENV_HOME" -a -w "$JV_ENV_HOME" ]
+  then
+    export HOME=$JV_ENV_HOME
+  else
+    export HOME=$PWD
+  fi
+fi
+
+# We want JV_ENV_HOME to be set before getting here, but try to give some
+# reasonable value if it's not.
+if [ -z "$JV_ENV_HOME" ]
+then
+  echo "Error: you are supposed to set JV_ENV_HOME in ~/.bashrc; trying to continue"
+  export JV_ENV_HOME=${HOME}/Documents/config
+fi
+
+# Conversely, the variable JVSCRIPTS really should NOT be set, but I'll allow it
+# to be overridden on demand.
+if [ -z "$JVSCRIPTS" ]
+then
+  export JVSCRIPTS=${JV_ENV_HOME}/jv-scripts
+fi
+
+# The following sets the variable hostname if it's not already set.
+if [ -z "$hostname" ]; then
+  hostname=`${JVSCRIPTS}/hostname | tr 'A-Z' 'a-z' | awk -F. '{print $1}'`
+fi
+
+if [ -x /bin/whoami ]
+then
+  bashuser=`/bin/whoami`
+elif [ -x /usr/bin/whoami ]
+then
+  bashuser=`/usr/bin/whoami`
+else
+# Well, we need a default...  this should never happen, of course
+  bashuser=jv
+fi
+# Now make sure we only use the part after a backslash, if any
+bashuser=${bashuser##*\\}
+
+# location.nscr is a non-checked-in file that allows you to specify machine-specific
+# overrides to environment variables
+if [ -f ${JV_ENV_HOME}/bash/location.nscr ]
+then
+  . ${JV_ENV_HOME}/bash/location.nscr
+fi
+
+. ${JV_ENV_HOME}/bash/platforms.nscr
+. ${JV_ENV_HOME}/bash/path.nscr
+
+# My platform-independent environment variables; shockingly few of them...
+export HISTFILE="${TMP}/${bashuser}-hist.log"
+export LANG="C"
+
+# Bash generally knows about users and hostnames, and supports \u and \h.
+# However, I don't necessarily like its answers for some implementations,
+# particularly on Windows.  One one machine, it said my user name was
+# Administrator, and presented my hostname in all caps.  I want to use logname
+# and lower-case instead, which I do above, for environment variables.  I can
+# hardcode them into the prompt here.
+
+export PS1="$bashuser:$hostname:\w:\!$ "
+
+. ${JV_ENV_HOME}/bash/functions.nscr
+
+# Another non-checked-in file.  For stuff that is a work-in-progress, and not
+# worthy of being checked in yet, or maybe stuff that I just don't want to
+# put on github.  :-)
+if [ -f ${JV_ENV_HOME}/bash/extra.nscr ]
+then
+  . ${JV_ENV_HOME}/bash/extra.nscr
+fi
