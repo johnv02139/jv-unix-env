@@ -1,0 +1,85 @@
+# -*- Mode: sh -*-
+#
+# path.nscr for bash
+#
+# Personal platform-dependent path setup for bash.
+
+# Use a temporary variable to build up a potential path, which will be
+# cleaned up at the end.
+ALLPATH=${PATH}
+
+# Could also do this to start, but not if you have first sourced some
+# site- or org-specific configuration files.
+# ALLPATH=`/usr/bin/getconf PATH`
+
+if [ -n "${ANT_HOME}" ]
+then
+    ALLPATH=${ANT_HOME}/bin:${ALLPATH}
+fi
+if [ -n "${GOLANG_HOME}" ]
+then
+    ALLPATH=${GOLANG_HOME}/bin:${ALLPATH}
+fi
+if [ -n "${ANDROID_PLATFORM_TOOLS}" ]
+then
+    ALLPATH=${ANDROID_PLATFORM_TOOLS}:${ALLPATH}
+fi
+if [ -n "${ANDROID_TOOLS}" ]
+then
+    ALLPATH=${ANDROID_TOOLS}:${ALLPATH}
+fi
+
+# Packages like Java and Emacs tend to have their executables installed into
+# /usr/bin on Unix, and so, despite the fact that we might set environment
+# variables to point to their installaions, we don't need to add their
+# installations to the path.  Do so only on Windows.
+if [ "$MACHINE" = "windows" ]
+then
+  ALLPATH=${ALLPATH}:${JAVA_HOME}/bin
+  ALLPATH=${ALLPATH}:${EMACSHOME}/bin
+  ALLPATH=${ALLPATH}:`win2unixpath ${WINDIR}/system32`
+  ALLPATH=${ALLPATH}:`win2unixpath ${WINDIR}`
+
+  CPSEP=";"
+else
+  ALLPATH=/usr/local/bin:${ALLPATH}
+  CPSEP=":"
+fi
+
+ALLPATH=${ALLPATH}:${HOME}/bin/${MACHINE}
+
+# Now create the actual PATH by iterating over the elements of
+# ALLPATH, making sure they are converted to Unix-style paths,
+# eliminating duplicates, and removing ".", which will be added
+# only at the very end.
+
+# We want to identify path elements, iterating over ALLPATH and
+# checking to see if the element is already in PATH.  For ALLPATH,
+# we start at the beginning and assume each path element is terminated
+# by a colon.  In fact, the final element is not (yet).  So, we add a
+# terminating colon at the end, just for syntactic simplicity.  Since
+# the elements we're extracting are exclusive of the colons, we don't
+# have to worry about the colon getting into the PATH.
+ALLPATH=${ALLPATH}:
+
+# JVSCRIPTS is so awesome, we know we always want it first!
+# Plus, it's simpler if PATH is initialized to something.
+PATH=${JVSCRIPTS}
+while [ -n "${ALLPATH}" ]
+do
+  elt=`win2unixpath ${ALLPATH%%:*}`
+  if [ "${elt}" != "." ]
+  then
+    case :${PATH}: in
+      *:"${elt}":*) ;;  # do nothing if $elt is already in $PATH
+      *) PATH=${PATH}:${elt} ;;
+    esac
+  fi
+  ALLPATH=${ALLPATH#*:}
+done
+unset ALLPATH elt
+
+# Some people say dot should not be in your PATH at all, but I think that's
+# overkill, particularly if you're not logging in to strange systems.  I trust
+# my sysadmins.  Still, make sure dot is always the LAST option.
+export PATH=${PATH}:.

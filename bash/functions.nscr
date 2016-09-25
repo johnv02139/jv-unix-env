@@ -1,0 +1,193 @@
+# -*- Mode: sh -*-
+#
+# functions.nscr
+#
+# Personal aliases and functions
+
+######################################################################
+# General Aliases
+######################################################################
+
+alias mv='/bin/mv -i'
+
+alias h='history'
+
+# I used to hate less.  Weird.
+alias more=less
+
+alias names="awk '{print "'$NF'"}'"
+alias lens="awk '{print length, \$0}'"
+
+alias wd='basename `pwd`'
+alias here='cd $cwd'
+
+alias path='echo $PATH | tr ":" "\012"'
+
+# ls aliases; some depend on default behavior of -l flag (whether it
+# prints the group or not)
+
+alias ls='/bin/ls -AF'
+alias lt='/bin/ls -lt'
+alias ltr='/bin/ls -ltr'
+alias ll='/bin/ls -ln'
+alias l='/bin/ls -lat | more'
+alias s='/bin/ls' # for when I accidentally type ;s instead of ls
+alias lsdirs="/bin/ls -l | grep ^d | awk '{print "'$NF'"}'"
+alias files="/bin/ls -l | grep='^-' | awk '{print "'$NF'"}'"
+
+alias lz='/bin/ls -1 | awk "{print length, \$0}" | sort -n | awk "{print \$2}"'
+alias ds='/bin/ls -l | grep ^d'
+alias subdirs='/bin/ls -ld */* | grep ^d'
+
+# git aliases; need more work...
+alias gadd="git status -s | awk '{print "'$2'"}' | xargs git add"
+alias gst='git status | head -1; git status -s | sort -k 2'
+alias glg='git ls-files | egrep '
+alias unpushed='git log origin/master..master'
+
+alias cf="cd ${JV_ENV_HOME}"
+
+alias cleen='/bin/rm -f *~ .#* .*~ *.o *.so core a.out #* *.class'
+alias nw='export DISPLAY=""'
+
+export JVFILES=~/Documents/Logs/all-files.log
+alias fff='find ~ -type f > ${JVFILES}'
+function jvgrep
+{
+  egrep $* ${JVFILES}
+}
+
+function jvgrepx
+{
+  suf=$1
+  patt='\.'${suf}'$'
+  egrep ${patt} ${JVFILES}
+}
+
+function ff
+{
+  dir=$1
+  shift
+  find $dir -type f $* | sort
+}
+
+function filegrep
+{
+  sdir=$1
+  flist=$2
+  shift
+  shift
+  cd $sdir
+  egrep $* `cat $flist`
+}
+
+function countlines
+{
+  sort | uniq -c | sort -n
+}
+
+function countg
+{
+  egrep -c $* | awk -F: '{printf("%s %s\n", $2, $1)}' | grep -v '^0'
+}
+
+function getsuf
+{
+  awk -F/ '{print $NF}' | awk -F. '{if (NF > 1) print $NF}'
+}
+
+function cntsuf
+{
+  getsuf | countlines
+}
+
+function cntisuf
+{
+  getsuf | tr '[A-Z]' '[a-z]' | countlines
+}
+
+function cntslash
+{
+  awk -F/ '{print NF " " $0}' | sort -n
+}
+
+function weirdsuf
+{
+  getsuf | grep -v '^[a-zA-Z0-9]*~*$' | grep -v ',v$' | sort | uniq | lens | sort -nr
+}
+
+function odiff
+{
+    diff $2 $1/$2
+}
+
+function jsonize
+{
+    cat $1 | python -mjson.tool
+}
+
+# upcd - go up (i.e., chdir) the directory hierarchy until finding the specified file
+function upcd
+{
+    if [ -z "$1" ]
+    then
+        echo "Error: upcd must receive a filename to look for"
+        return
+    fi
+    if [ -n "$2" ]
+    then
+        echo "Error: upcd takes only one argument, a filename to look for"
+        return
+    fi
+    sfile=$1
+    orig=${PWD}
+    while [ ! -f ./${sfile} ]
+    do
+        if [ "/" = ${PWD} ]
+        then
+            echo "Could not locate ${sfile} in any parent directory of ${orig}"
+            cd $orig
+            break
+        fi
+        cd ..
+    done
+    # The unset is so that zsh doesn't "helpfully" change the prompt
+    # as it does when we cd into a directory stored in a variable
+    unset orig
+    unset sfile
+}
+
+# Get git status for each directory in the working directory
+function sgst
+{
+    here=${PWD}
+    for pkg in *
+    do
+        cd ${here}/${pkg}
+        if [ -d ./.git/. ]
+        then
+            echo ${pkg}
+            git status -s
+        else
+            echo "++ ${pkg} not a git repository"
+        fi
+    done
+    cd ${here}
+    unset here
+}
+
+function gtd
+{
+# For shells within emacs... or, really, whenever.  I can pipe through
+# more if I want to... who the hell is git to do it for me?
+    files=$*
+    if [ -z "$files" ]
+    then
+        echo "diffing all modified files below here"
+        files=`git status -s | grep -v '\.\.' | awk '{print $2}'`
+    fi
+    for file in $files
+    do
+        git diff -w $file | tr -d '\015' | cat
+   done
+}
