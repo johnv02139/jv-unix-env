@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Very simple script go get a timestamp, as suitable for use by "touch", of
+# a file.
+
+# The primary usage of this script is when I want to edit a file, but not
+# update its file modification time.  Some may simply find that wrong, but
+# for me, changing things like whitespace, particularly newline styles,
+# do not count as modifying the file.  I want the modification date to
+# reflect when I last made a true modification to the content of the file.
+
+# To aid with this even further, the -v mode will just give you the exact
+# command to copy and paste into the shell, which should reset the modification
+# time to what it was.  (Assuming your version of "touch" works as I expect.)
+
+verbose=no
+
+if [ "$1" = "-v" ]
+then
+  verbose=yes
+  shift
+fi
+
+name=$1
+
+if [ -n "$2" ]
+then
+  offset=$2
+fi
+
+# It's a little risky to rely on the output of stat to such a degree
+# to assume that the modification time is the 10th field.  An alternate
+# approach would be to use "stat -s" and then look at $st_mtime, but
+# that doesn't use the strftime stuff.
+
+stamp=`stat -t "%Y%m%d%H%M" $name | awk '{print $10}' | tr -d '"'`
+
+if [ "$verbose" = "yes" ]
+then
+  echo "touch -t ${stamp} $name"
+else
+  echo ${stamp}
+fi

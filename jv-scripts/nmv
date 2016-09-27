@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# nmv -- mv n files, into a single destination directory, but preserving
+#  relative filepaths, including creating the directory structures if
+#  necessary.  Uses (only) "mv -i", so preserves that behavior: if the
+#  destination file already exists, you'd be prompted about overwriting it.
+
+usage ()
+{
+  echo "$0: move n filepaths to a single existing destination directory,"
+  echo "    preserving relative subpaths"
+  echo "usage: $0 <file1> [ <file2> ... ] <destdir>"
+  exit 1
+}
+
+if [ -z "$2" ]
+then
+  usage
+fi
+
+dest=${*: -1}
+
+if [ ! -d ${dest}/. ]
+then
+  if [ -e ${dest} ]
+  then
+    echo "Error: destination ${dest} is not a directory."
+  else
+    echo "Error: destination ${dest} does not exist."
+  fi
+  usage
+fi
+
+# This horrible little thing says, "all the arguments except the last"
+# This line alone is probably good evidence of why I should be using
+# a more expressive scripting language, but bash is just so easy...
+srcs="${@:1:$(($#-1))}"
+
+for x in ${srcs}
+do
+  if [ -e "${x}" ]
+  then
+    pth=${dest}/`dirname $x`
+    mkdir -p ${pth}
+    if [ -d ${pth} ]
+    then
+      nm=`basename $x`
+      /bin/mv -i "$x" "${pth}/${nm}"
+    else
+      echo "Error: could not create directory ${pth}"
+    fi
+  else
+    echo "Error: ${x} does not exist"
+  fi
+done

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ -x /bin/hostname ]
+then
+  /bin/hostname
+elif [ -x /c/Windows/System32/HOSTNAME.EXE ]
+then
+  /c/Windows/System32/HOSTNAME.EXE
+else
+  echo "unknown"
+fi
