@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# This script is meant for a situation in which you have numerous (well,
+# more than two, anyway) versions of a file, and you intend to manually
+# resolve differences among them.  This tries to help you know where to
+# start, by telling you how different each file is from each other, and
+# presenting a sorted list.
+
+# This approach is not perfect, but we attempt to sort by "number of diffs."
+# Basically, if you run "diff" in standard mode, with no context lines, it
+# shows you blocks of lines that are different.  Lines from one file will
+# be prefixed with ">", and the other file with "<".  Any line that begins
+# with any other character is giving you meta-information about the diff,
+# basically, the number of the lines that are being referred to.  There
+# should be one meta-line per section of diffs.  So, the way we count
+# "number of diffs" is by counting lines that don't start with ">" or "<".
+
+# We also count the total number of lines of diffs, which is also important,
+# and becomes the secondary sort index.
+
+logfile=${TMP}/many-diffs-$$.log
+diffout=${TMP}/diffout-$$.diff
+
+prefix=$1
+suffix=$2
+
+/bin/rm -f $logfile
+touch $logfile
+
+sort=/bin/sort
+if [ -x /usr/bin/sort ]
+then
+  sort=/usr/bin/sort
+fi
+
+# TODO: this doesn't work for files with spaces in their names,
+# but probably could be made to by using IFS.  A really complete
+# solution in a shell script would be to use "find -exec".  But
+# that becomes quite an ugly and undebuggable shell script, and
+# there are better approaches using more sophisticated languages.
+
+files=`/bin/ls ${prefix}*${suffix}`
+
+for file1 in $files
+do
+    advanced=0
+    for file2 in $files
+    do
+      if [ "$file1" = "$file2" ]
+      then
+        advanced=1
+      elif [ $advanced = 1 ]
+      then
+        /bin/rm -f $diffout
+        diff -w $file1 $file2 > $diffout
+        ndiffs=`grep -v '^[><]' $diffout | wc -l`
+        nlines=`cat $diffout | wc -l`
+        echo "$ndiffs $nlines $file1 $file2" >> $logfile
+      fi
+    done
+done
+
+$sort -n $logfile
+
+# For some sets of files, maybe the total lines might be more important
+# than the number of diffs.  We could get that sort order either by
+# rearranging the echo, above, or just by sorting by the second field.
+# TODO: have a command-line argument to choose this sort method?
+#
+# $sort -n -k 2 $logfile
+
+/bin/rm -f $logfile

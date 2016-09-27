@@ -1,0 +1,256 @@
+#!/usr/bin/perl
+
+# This script expects to be run from within a git repository.  It finds files
+# that are modified and moves them out of the way, and replaces them with the
+# up-to-date version (*).  You should set the environment variable "MODS_DIR"
+# before running this, but if it's not set, the script will try to figure
+# something out, and let you know where it wants to move the files.
+
+# Of course, git offers options to do similar things on its own, notably
+# stashing, but you can get conflicts when trying to apply the stash.
+# Sometimes -- often, I find -- it's nice to have the actual file to work
+# with, and not just a patch or a diff.
+
+# This was written with a fairly naive understanding of git, but it still
+# does the job most of the time.  TODO: change script to reflect better
+# understanding of git.
+
+# * - the notion of "up to date" is not necessarily so well defined, but
+# what I mean here is, the file, as it exists in the current branch, in
+# your repository.  This script does no fetching or other network activity,
+# and doesn't look at any other branch (remote or local) besides whatever
+# you happen to be using.
+
+# Run without args, the script just tells you what it *would* do.  (It also
+# might create some directories under MODS_DIR, which it shouldn't; TODO.)
+# To actually move the files, supply the -go argument.
+
+use Env;
+use Getopt::Long;
+use File::Copy;
+use Cwd;
+use File::Basename;
+use File::Spec;
+use File::Path;
+
+# TODO: this isn't in my @INC, but it exists; could it help?
+# use Git::Repository;
+
+my ($modsdir, $gitPath, $alwaysUseVersion, $doMove);
+
+sub usage
+{
+    print "usage\n";
+    die 'Try again';
+}
+
+sub checkOrCreateDir
+{
+    my $dstdir = $_[0];
+    if ( ! -e $dstdir ) {
+        mkpath $dstdir;
+    }
+    if ( ! -e $dstdir ) {
+        print "ERROR: unable to create $dstdir\n";
+        usage;
+    }
+    if ( ! -d $dstdir ) {
+        print "ERROR: $dstdir exists and is not a directory\n";
+        usage;
+    }
+    if ( ! -x $dstdir ) {
+        print "ERROR: $dstdir is not accessible (by you)\n";
+        usage;
+    }
+    if ( ! -w $dstdir ) {
+        print "ERROR: $dstdir is not writable (by you)\n";
+        usage;
+    }
+    return 1;
+}
+
+sub updateGit
+{
+    my @files = @_;
+    my $success = 1;
+    for my $upfile ( @files ) {
+        if ( -e $upfile ) {
+            print "ERROR: wanted to get clean version of $upfile, but it exists\n";
+            $success = 0;
+        } else {
+            print "git checkout $upfile\n";
+            `git checkout $upfile`;
+        }
+    }
+    return $success;
+}
+
+sub deCache
+{
+    my $decacheable = $_[0];
+    if ( -e $decacheable ) {
+        print "want to decache ${decacheable}, but it still exists\n";
+    } else {
+        print "git rm --cached $decacheable\n";
+        `git rm --cached $decacheable`;
+    }
+}
+
+sub safemv
+{
+    my ($dst, $files) = @_;
+    my %mvlog = ();
+    my $count = 0;
+    for my $src ( @$files ) {
+        if ( -l $src ) {
+            my $st = unlink $src;
+            if ( $st ) {
+                print "Deleted symbolic link: $src\n";
+                ++$count;
+            } else {
+                print "$src is a symbolic link, but failed to remove it\n";
+            }
+        } else {
+            $src =~ s,/*$,,g;
+
+            my ($prefix, $srcdir, $suffix) = fileparse($src, qr/\.[^.]*/);
+            $prefix =~ s,-[1-9][0-9]*$,,g;
+            $srcdir =~ s,^[./]*,,g;
+
+            my $destdir = $dst . '/' . $srcdir;
+            checkOrCreateDir($destdir);
+
+            my $basename  = $prefix . $suffix;
+            my $trashname = $destdir . $basename;
+
+            if ( -e $trashname || $alwaysUseVersion ) {
+                my $version = 2;
+                $trashname = $destdir . $prefix . '-' . $version++ . $suffix;
+                while ( -e $trashname ) {
+                    $trashname = $destdir . $prefix . '-' . $version++ . $suffix;
+                }
+            }
+            my $st = move $src, $trashname;
+            if ( $st ) {
+                print "Moved $src to $trashname\n";
+                ++$count;
+            } else {
+                print "Unable to move $src (tried $trashname)\n";
+            }
+        }
+    }
+    return $count;
+}
+
+sub handleGitDirectory
+{
+    my $st = `git status -s`;
+    my @mvFiles;
+    my @addingFiles;
+    my @getFiles;
+
+    my $modsSubDir = File::Spec->catdir( $modsdir, $gitPath );
+
+    for my $line ( split( /\n/, $st ) ) {
+        $line =~ s/^\s+|\s+$//g;
+        # Bind the third value just to make sure it is NOT there
+        my ($status, $filename, $more) = split( / +/, $line );
+
+        if ( $filename && ! $more ) {
+            if ( $status eq 'AD' ) {
+                deCache $filename;
+            } elsif ( $status eq 'A' ) {
+                push @addingFiles, $filename;
+            } elsif ( $status =~ /^A/ ) {
+                push @addingFiles, $filename;
+            } elsif ( $status =~ /D/ ) {
+                push @getFiles, $filename;
+            } elsif ( $status =~ /M/ ) {
+                push @mvFiles, $filename;
+                push @getFiles, $filename;
+            } elsif ( $status eq '??' ) {
+                push @mvFiles, $filename;
+            } else {
+                print "Not sure how to interpret status: $status $filename\n";
+            }
+        } else {
+            print "could not parse: ${line}\n";
+        }
+    }
+    my $nAddingFiles = scalar(@addingFiles);
+    print "found $nAddingFiles files being Added\n";
+
+    my $nMvFiles = scalar(@mvFiles);
+    print "found $nMvFiles files to move/delete\n";
+    if ( $nMvFiles ) {
+        checkOrCreateDir($modsSubDir);
+        if ( $doMove ) {
+            print "doing move\n";
+            safemv $modsSubDir, \@mvFiles;
+        } else {
+            print "not doing move (would use $modsSubDir)\n";
+        }
+    }
+
+    my $nGetFiles = scalar(@getFiles);
+    print "found $nGetFiles files to get\n";
+    if ( $nGetFiles ) {
+        if ( $doMove ) {
+            updateGit @getFiles;
+        }
+    }
+}
+
+sub findModsDest
+{
+    if ( $modsdir ) {
+        checkOrCreateDir($modsdir);
+    } else {
+        $modsdir = $ENV{MODS_DIR};
+        if ( $modsdir ) {
+            checkOrCreateDir($modsdir);
+        } else {
+            my $homedir = $ENV{HOME};
+            if ( $homedir ) {
+                $homedir =~ s,/+$,,g;
+                print "got homedir $homedir \n";
+                $modsdir = ${homedir} . '/mods';
+                checkOrCreateDir($modsdir);
+            } else {
+                print "unable to find mods_dir or home\n";
+            }
+        }
+    }
+}
+
+sub findGit
+{
+    my $prev = '';
+    my $here = getcwd;
+    while ( ! -e '.git' && ( $here ne '/' )  && ( $here ne $prev ) ) {
+        print "no .git here; going up\n";
+        chdir '..';
+        $prev = $here;
+        $here = getcwd;
+    }
+    if ( -e '.git' ) {
+        print 'found .git in ' . $here . "\n";
+    } else {
+        die "not inside a git directory\n";
+    }
+    # TODO: is there an idiom for ignoring $volume and $directories?
+    (my $volume, my $directories, my $file) = File::Spec->splitpath( $here );
+    return $file;
+}
+
+GetOptions('modsdir=s' => \$modsdir,
+           'version' => \$alwaysUseVersion,
+           'go' => \$doMove);
+findModsDest;
+
+if ( ! $modsdir ) {
+    print "ERROR: could not determine where to move mods to\n";
+}
+
+$gitPath = findGit;
+handleGitDirectory;

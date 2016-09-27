@@ -1,0 +1,53 @@
+#!/bin/bash
+
+default="./loose"
+
+if [ -z "$1" ]
+then
+  ddir=$default
+else
+  ddir=$1
+fi
+
+usage ()
+{
+  echo "Usage: $0 [loosedir]"
+  echo '  Moves "loose" files into a single, not-yet-existing directory.'
+  echo "  If no directory is supplied, then $default is used."
+  echo "  If $default already exists, you must supply the name of a"
+  echo "  nonexistent location to be created and used."
+  echo '  A "loose" file is a regular file in this directory, not in a sub-directory.'
+  exit 1
+}
+
+if [ -e "$ddir" ]
+then
+  echo "Error: dest dir $ddir already exists."
+  usage
+fi
+
+/bin/mkdir "$ddir"
+
+# We're going to use "*", which tells bash we want "all the files".  But
+# not really.  With normal settings, bash allows "hidden files"; anything
+# starting with a dot does not match "*".  These options allow us to really
+# match all files in the directory, conveniently omitting "." and "..",
+# which are not actually files in the first place.
+shopt -s dotglob nullglob
+
+for x in *
+do
+  if [ -f "${x}" ]
+  then
+    # We're using -i, but there should be no possibility of conflict.  We start
+    # with an empty directory, and we're only moving files that were already in
+    # the same directory as each other.
+    /bin/mv -i "${x}" "${ddir}/"
+  fi
+done
+
+# Alternate approach:
+# /bin/mv -i `/bin/ls -Al | grep '^-' | tail -n +2 | awk '{print $NF}'` ${ddir}/
+# A lot simpler and less pedantic, but doesn't handle spaces in the filenames,
+# and harder to understand.
+

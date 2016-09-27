@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# This script just lets you type a command while putting the elements in a
+# different order.  It's all about command history.  When working with a
+# particular directory, depending on the command, this script can make it
+# easier.
+
+# For example, let's say you are selectively copying files into a new directory.
+# You issue the command:
+#    cp foo.txt ../x/y/z/mydir/
+
+# Then, you check bar.txt, and find you want to copy it, too.  You could simply
+# retype the command, using bash's helpful completions.  You also could use
+# perhaps use bash's history substitution, as in "^foo.txt^bar.txt"... though
+# you get no completion help with something like that.
+
+# What I'm likely to do (without this script) is get to the previous cp command,
+# then move the cursor back to foo.txt, delete it, enter bar.txt (with
+# completion), and hit enter.  But, it's a lot easier when the thing I want to
+# replace is the last thing on the line.
+
+# So, this lets you say:
+#   into ../x/y/z/mydir/ cp foo.txt
+# Then, you can do a previous line and edit "foo.txt" to "bar.txt".  You could
+# also, say, change "cp" to "mv".
+
+usage ()
+{
+  echo "usage: $0 <dir> <command> [<argument>*] <target>"
+  echo "  rewrites the arguments as <command> [<argument>*] <target> <dir>"
+  exit 1
+}
+
+if [ -z "$3" ]
+then
+  usage
+fi
+
+
+dir=$1
+shift
+
+# "all the (remaining) arguments except the last one"
+cmd="${@:1:$(($#-1))}"
+
+# the last argument
+target=${*: -1}
+
+echo "$cmd $target $dir"
+$cmd $target $dir

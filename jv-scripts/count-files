@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# This very simple script just tells you how many files exist underneath each
+# subdirectory of your current working directory.  It takes no arguments.  If
+# you want to know about some other directory, cd there first and then run this.
+# It sorts the directories from fewest files (at the top) to most.  It counts
+# regular files, not directories or symlinks or anything else.
+
+tmpfile=/tmp/cf-$$.log
+/bin/rm -f $tmpfile
+touch $tmpfile
+
+for elt in *
+do
+  if [ -d "$elt" ]
+  then
+    echo -n "$elt " >> $tmpfile
+    find "$elt" -type f | wc -l >> $tmpfile
+  fi
+done
+
+awk '{printf("%9s %s\n", $2, $1)}' $tmpfile | sort -n
+/bin/rm -f $tmpfile
