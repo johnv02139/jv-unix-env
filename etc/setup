@@ -1,0 +1,62 @@
+#!/bin/bash
+
+here=${PWD}
+myname=`basename $0`
+
+mydir=`dirname $0`
+cd $mydir
+mydir=${PWD}
+
+cd ..
+# TODO: on Windows, for Emacs config, we need the Windows-style path.
+export JV_ENV_HOME=${PWD}
+
+if [ -z "$HOME" -o ! -w "$HOME" ]
+then
+  echo "Error: HOME env var not set properly."
+  echo "  There are ways for this script to make some guesses, but why?"
+  echo "export HOME=/good/dir"
+  echo "  and re-run"
+  exit 1
+fi
+
+EMACSDIR=${HOME}/.emacs.d
+if [ -e $EMACSDIR ]
+then
+  echo "$EMACSDIR already exists"
+else
+  /bin/mkdir -p $EMACSDIR
+fi
+
+if [ ! -d $EMACSDIR ]
+then
+  echo "Error: $EMACSDIR is not a directory or failed to create"
+  exit 2
+fi
+
+EMACSINIT=${EMACSDIR}/init.el
+if [ -e $EMACSINIT ]
+then
+  echo "$EMACSINIT already exists"
+else
+  /bin/cat ${JV_ENV_HOME}/emacs/jv-init.el |\
+    /bin/sed "s,JVCFGHME,${JV_ENV_HOME},g" |\
+    /bin/grep -v 'easy substitution via sed' > ${EMACSINIT}
+fi
+
+BASHRC=${HOME}/.bashrc
+if [ -e $BASHRC ]
+then
+  echo "$BASHRC already exists"
+else
+  /bin/cat ${JV_ENV_HOME}/bash/init-bash.nscr |\
+    /bin/sed "s,JVCFGHME,${JV_ENV_HOME},g" > ${BASHRC}
+fi
+
+PROF=${HOME}/.bash_profile
+if [ -e $PROF ]
+then
+  echo "$PROF already exists"
+else
+  /bin/ln -s ${BASHRC} ${PROF}
+fi
