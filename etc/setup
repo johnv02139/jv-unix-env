@@ -38,7 +38,11 @@ EMACSINIT=${EMACSDIR}/init.el
 if [ -e $EMACSINIT ]
 then
   echo "$EMACSINIT already exists"
-else
+  /bin/mv $EMACSINIT .
+fi
+
+if [ ! -e $EMACSINIT ]
+then
   /bin/cat ${JV_ENV_HOME}/emacs/jv-init.el |\
     /bin/sed "s,JVCFGHME,${JV_ENV_HOME},g" |\
     /bin/grep -v 'easy substitution via sed' > ${EMACSINIT}
@@ -48,7 +52,11 @@ BASHRC=${HOME}/.bashrc
 if [ -e $BASHRC ]
 then
   echo "$BASHRC already exists"
-else
+  /bin/mv $BASHRC .
+fi
+
+if [ ! -e $BASHRC ]
+then
   /bin/cat ${JV_ENV_HOME}/bash/init-bash.nscr |\
     /bin/sed "s,JVCFGHME,${JV_ENV_HOME},g" > ${BASHRC}
 fi
@@ -57,6 +65,9 @@ PROF=${HOME}/.bash_profile
 if [ -e $PROF ]
 then
   echo "$PROF already exists"
-else
+  /bin/mv $PROF .
+fi
+if [ ! -e $PROF ]
+then
   /bin/ln -s ${BASHRC} ${PROF}
 fi
