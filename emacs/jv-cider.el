@@ -5,6 +5,9 @@
 
 (add-hook 'cider-mode-hook 'jv-cider-mode)
 
+
+(setq nrepl-repl-buffer-name-template "*repl-cider%s*")
+
 (setq cider-repl-history-size 5000)
 (setq cider-repl-history-file
       (format "%s/.emacs.d/cider-history.txt" homedir))
