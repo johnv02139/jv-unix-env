@@ -126,3 +126,9 @@
 
 (when (require 'markdown-mode nil 'noerror)
   (add-to-list 'auto-mode-alist '("\\.md?$" . markdown-mode)))
+
+(when (eq system-type 'darwin) ;; mac specific settings
+  (setq mac-option-modifier 'meta)
+  (setq mac-command-modifier 'meta)
+  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  )
