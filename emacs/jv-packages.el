@@ -10,7 +10,7 @@
 (defvar my-packages '(clojure-mode cider markdown-mode))
 
 (require 'package)
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
 (package-initialize)
 
