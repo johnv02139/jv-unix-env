@@ -47,6 +47,7 @@ alias unpushed='git log origin/master..master'
 
 alias cf="cd ${JV_ENV_HOME}"
 
+alias wndw='echo -n -e "\033]0;Git Bash\a"'
 alias cleen='/bin/rm -f *~ .#* .*~ *.o *.so core a.out #* *.class'
 alias nw='export DISPLAY=""'
 
