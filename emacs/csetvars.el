@@ -11,12 +11,13 @@
    '(clojure-mode json-mode markdown-mode mustache-mode fsharp-mode))
  '(safe-local-variable-values
    (quote
-    ((bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")
-     (checkdoc-package-keywords-flag)
-     (Syntax . COMMON-LISP)
+    ((Syntax . COMMON-LISP)
      (Package . CL-EDI)
      (Base . 10)
-     (indent-tabs-mode . NIL)))))
+     (indent-tabs-mode . NIL)
+     (bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")
+     (emacs-lisp-docstring-fill-column . 75)
+     (checkdoc-package-keywords-flag)))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
