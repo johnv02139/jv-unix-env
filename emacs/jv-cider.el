@@ -3,8 +3,6 @@
 ;; jv-cider
 ;;
 
-(add-hook 'cider-mode-hook 'jv-cider-mode)
-
 (setq nrepl-repl-buffer-name-template "*repl-cider%s*")
 
 (setq cider-repl-history-size 5000)
@@ -51,6 +49,8 @@ that of the namespace in the Clojure source buffer."
 (defun jv-cider-mode ()
   (message "invoking cider mode hook"))
 
+(add-hook 'cider-mode-hook 'jv-cider-mode)
+
 ;; (require 'cider-history)
 (setq cider-history-show-preview t)
 ; (setq cider-history-quit-action 'quit-window)
@@ -58,17 +58,17 @@ that of the namespace in the Clojure source buffer."
 ; (setq cider-history-resize-window nil)
 ; (setq cider-history-resize-window t)
 
+(defun clear-repl-buffer ()
+  (interactive)
+  (cider-history-clear-preview)
+  (clear-buffer))
+
 (defun cider-repl-kill-all-input ()
   "Kill all text and overlays from the prompt to point."
   (interactive)
   (cider-history-clear-preview)
   (cider-repl-kill-input))
   
-(defun clear-repl-buffer ()
-  (interactive)
-  (cider-history-clear-preview)
-  (clear-buffer))
-
 (define-key cider-repl-mode-map (kbd "C-c C-u") #'cider-repl-kill-all-input)
 
 
