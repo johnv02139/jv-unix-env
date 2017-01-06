@@ -8,12 +8,15 @@
  '(inhibit-startup-screen t)
  '(initial-scratch-message ";; -*- Mode: Lisp-Interaction -*-\n\n\n")
  '(package-selected-packages
-   '(mustache-mode markdown-mode json-mode clojure-mode fsharp-mode))
+   '(clojure-mode json-mode markdown-mode mustache-mode fsharp-mode))
  '(safe-local-variable-values
-   (quote ((Syntax . COMMON-LISP)
-           (Package . CL-EDI)
-           (Base . 10)
-           (indent-tabs-mode . NIL)))))
+   (quote
+    ((bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")
+     (checkdoc-package-keywords-flag)
+     (Syntax . COMMON-LISP)
+     (Package . CL-EDI)
+     (Base . 10)
+     (indent-tabs-mode . NIL)))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
