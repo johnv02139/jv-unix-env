@@ -10,8 +10,6 @@
 (setq cider-repl-history-size 5000)
 (setq cider-repl-history-file
       (format "%s/.emacs.d/repl-history.txt" homedir))
-(setq cider-history-show-preview t)
-
 (setq cider-repl-scroll-on-output nil)
 
 ;; copy of original function, with different name
@@ -54,6 +52,7 @@ that of the namespace in the Clojure source buffer."
   (message "invoking cider mode hook"))
 
 ;; (require 'cider-history)
+(setq cider-history-show-preview t)
 
 (defun cider-repl-kill-all-input ()
   "Kill all text and overlays from the prompt to point."
