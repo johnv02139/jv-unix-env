@@ -7,7 +7,8 @@
 (if (not (boundp 'download-jv-packages-p))
   (defvar download-jv-packages-p t))
 
-(defvar my-packages '(clojure-mode cider markdown-mode))
+(defvar my-packages '(clojure-mode markdown-mode))
+;; omit cider, for development
 
 (require 'package)
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
