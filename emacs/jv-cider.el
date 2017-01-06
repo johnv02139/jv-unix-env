@@ -53,6 +53,22 @@ that of the namespace in the Clojure source buffer."
 (defun jv-cider-mode ()
   (message "invoking cider mode hook"))
 
+;; (require 'cider-history)
+
+(defun cider-repl-kill-all-input ()
+  "Kill all text and overlays from the prompt to point."
+  (interactive)
+  (cider-history-clear-preview)
+  (cider-repl-kill-input))
+  
+(defun clear-repl-buffer ()
+  (interactive)
+  (cider-history-clear-preview)
+  (clear-buffer))
+
+(define-key cider-repl-mode-map (kbd "C-c C-u") #'cider-repl-kill-all-input)
+
+
 (define-key cider-mode-map      (kbd "C-c ,") 'shell)
 (define-key cider-repl-mode-map (kbd "C-c ,") 'shell)
 
