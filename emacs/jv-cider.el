@@ -53,6 +53,10 @@ that of the namespace in the Clojure source buffer."
 
 ;; (require 'cider-history)
 (setq cider-history-show-preview t)
+; (setq cider-history-quit-action 'quit-window)
+; (setq cider-history-resize-window '(8 . 4))
+; (setq cider-history-resize-window nil)
+; (setq cider-history-resize-window t)
 
 (defun cider-repl-kill-all-input ()
   "Kill all text and overlays from the prompt to point."
