@@ -18,6 +18,11 @@
 # We also count the total number of lines of diffs, which is also important,
 # and becomes the secondary sort index.
 
+if [ -z "${TMP}" ]
+then
+  TMP=/tmp
+fi
+
 logfile=${TMP}/many-diffs-$$.log
 diffout=${TMP}/diffout-$$.diff
 
