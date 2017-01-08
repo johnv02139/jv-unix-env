@@ -13,7 +13,7 @@
 # where the directory designated as my home dir doesn't exist.  If that's the case,
 # Then it's actually pretty unlikely that I'd be accessing these files, so, umm...
 # But just in case, let's try.
-if [ -z "$HOME" -o ! -w "$HOME" ]
+if [ -z "$HOME" -o ! -d "$HOME" ]
 then
   if [ -n "$JV_ENV_HOME" -a -w "$JV_ENV_HOME" ]
   then

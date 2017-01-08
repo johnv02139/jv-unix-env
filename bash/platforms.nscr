@@ -28,7 +28,6 @@ export EDITOR="/usr/bin/emacs -nw"
 export VISUAL="/usr/bin/emacs -nw"
 export ALTERNATE_EDITOR="/usr/bin/emacs -nw -q"
 
-
 # Again, the real distinction is Windows vs. non-Windows, but within Windows,
 # there are three options I've used regularly.
 #   (1) MinGW - http://www.mingw.org/ - Minimalist GNU for Windows
@@ -46,7 +45,7 @@ export ALTERNATE_EDITOR="/usr/bin/emacs -nw -q"
 # to convert back to Windows-style paths on demand.
 
 case "$os_uname" in
-  *MINGW32*)
+  *MINGW*)
     # Actually, mingw systems should have MSYSTEM set by default,
     # but just to be sure, and to set MACHINE, as well
     MSYSTEM=MINGW32
@@ -90,12 +89,16 @@ function win2unixpath
   if [ "$MSYSTEM" = "MINGW32" ]; then
     if [ -d "${thepath}" ]
     then
-      pushd ${thepath} > /dev/null 2>&1
-      rval=`pwd -P`
-      popd > /dev/null 2>&1
-      echo $rval
+      if pushd ${thepath} > /dev/null 2>&1
+      then
+        rval=`pwd -P`
+        popd > /dev/null 2>&1
+        echo $rval
+      else
+        echo $thepath
+      fi
     else
-      echo "."
+      echo $thepath
     fi
   elif [ "$MSYSTEM" = "INTERIX" ]; then
     ntpath2posix $thepath
