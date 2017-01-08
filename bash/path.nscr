@@ -46,7 +46,11 @@ else
   CPSEP=":"
 fi
 
-ALLPATH=${ALLPATH}:${HOME}/bin/${MACHINE}
+homebin=${HOME}/bin/${MACHINE}
+if [ -d "${homebin}" ]
+then
+  ALLPATH=${ALLPATH}:${homebin}
+fi
 
 # Now create the actual PATH by iterating over the elements of
 # ALLPATH, making sure they are converted to Unix-style paths,
@@ -62,22 +66,34 @@ ALLPATH=${ALLPATH}:${HOME}/bin/${MACHINE}
 # have to worry about the colon getting into the PATH.
 ALLPATH=${ALLPATH}:
 
+# Introduce a variable to store elements that were put into the
+# path which do not actually name directories.  This is solely
+# for "debugging" the path construction.  The variable is not
+# actually used for anything.
+export NOPATH=.
+
 # JVSCRIPTS is so awesome, we know we always want it first!
 # Plus, it's simpler if PATH is initialized to something.
 PATH=${JVSCRIPTS}
 while [ -n "${ALLPATH}" ]
 do
-  elt=`win2unixpath ${ALLPATH%%:*}`
-  if [ "${elt}" != "." ]
+  elt=${ALLPATH%%:*}
+  winelt=`win2unixpath "${elt}"`
+  if [ -d "${winelt}" ]
   then
     case :${PATH}: in
-      *:"${elt}":*) ;;  # do nothing if $elt is already in $PATH
-      *) PATH=${PATH}:${elt} ;;
+      *:"${winelt}":*) ;;  # do nothing if $winelt is already in $PATH
+      *) PATH=${PATH}:${winelt} ;;
+    esac
+  else
+    case :${NOPATH}: in
+      *:"${winelt}":*) ;;  # do nothing if $winelt is already in $NOPATH
+      *) NOPATH=${NOPATH}:${winelt} ;;
     esac
   fi
   ALLPATH=${ALLPATH#*:}
 done
-unset ALLPATH elt
+unset ALLPATH elt winelt homebin
 
 # Some people say dot should not be in your PATH at all, but I think that's
 # overkill, particularly if you're not logging in to strange systems.  I trust
