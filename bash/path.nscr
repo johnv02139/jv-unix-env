@@ -44,6 +44,10 @@ if [ -n "${JAVA_HOME}" ]
 then
     ALLPATH=${JAVA_HOME}/bin:${ALLPATH}
 fi
+if [ -d /usr/local/bin ]
+then
+    ALLPATH=${ALLPATH}:/usr/local/bin
+fi
 
 # Packages like Java and Emacs tend to have their executables installed into
 # /usr/bin on Unix, and so, despite the fact that we might set environment
@@ -56,7 +60,6 @@ then
 
   CPSEP=";"
 else
-  ALLPATH=/usr/local/bin:${ALLPATH}
   CPSEP=":"
 fi
 
