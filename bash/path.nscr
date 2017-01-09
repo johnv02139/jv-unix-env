@@ -24,6 +24,14 @@ if [ -n "${GOLANG_HOME}" ]
 then
     ALLPATH=${GOLANG_HOME}/bin:${ALLPATH}
 fi
+if [ -n "${CASK_HOME}" ]
+then
+    ALLPATH=${CASK_HOME}/bin:${ALLPATH}
+fi
+if [ -n "${PYTHON_HOME}" ]
+then
+    ALLPATH=${PYTHON_HOME}:${ALLPATH}
+fi
 if [ -n "${ANDROID_PLATFORM_TOOLS}" ]
 then
     ALLPATH=${ANDROID_PLATFORM_TOOLS}:${ALLPATH}
