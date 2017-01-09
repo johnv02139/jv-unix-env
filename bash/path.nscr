@@ -12,6 +12,10 @@ ALLPATH=${PATH}
 # site- or org-specific configuration files.
 # ALLPATH=`/usr/bin/getconf PATH`
 
+if [ -n "${EMACSHOME}" ]
+then
+    ALLPATH=${EMACSHOME}/bin:${ALLPATH}
+fi
 if [ -n "${ANT_HOME}" ]
 then
     ALLPATH=${ANT_HOME}/bin:${ALLPATH}
@@ -28,6 +32,10 @@ if [ -n "${ANDROID_TOOLS}" ]
 then
     ALLPATH=${ANDROID_TOOLS}:${ALLPATH}
 fi
+if [ -n "${JAVA_HOME}" ]
+then
+    ALLPATH=${JAVA_HOME}/bin:${ALLPATH}
+fi
 
 # Packages like Java and Emacs tend to have their executables installed into
 # /usr/bin on Unix, and so, despite the fact that we might set environment
@@ -35,8 +43,6 @@ fi
 # installations to the path.  Do so only on Windows.
 if [ "$MACHINE" = "windows" ]
 then
-  ALLPATH=${ALLPATH}:${JAVA_HOME}/bin
-  ALLPATH=${ALLPATH}:${EMACSHOME}/bin
   ALLPATH=${ALLPATH}:`win2unixpath ${WINDIR}/system32`
   ALLPATH=${ALLPATH}:`win2unixpath ${WINDIR}`
 
