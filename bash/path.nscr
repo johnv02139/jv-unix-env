@@ -46,7 +46,7 @@ then
 fi
 if [ -d /usr/local/bin ]
 then
-    ALLPATH=${ALLPATH}:/usr/local/bin
+    ALLPATH=/usr/local/bin:${ALLPATH}
 fi
 
 # Packages like Java and Emacs tend to have their executables installed into
