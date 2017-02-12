@@ -31,6 +31,10 @@ fi
 if [ -n "${PYTHON_HOME}" ]
 then
     ALLPATH=${PYTHON_HOME}:${ALLPATH}
+    if [ -d "${PYTHON_HOME}/Scripts" ]
+    then
+      ALLPATH=${PYTHON_HOME}/Scripts:${ALLPATH}
+    fi
 fi
 if [ -n "${ANDROID_PLATFORM_TOOLS}" ]
 then
