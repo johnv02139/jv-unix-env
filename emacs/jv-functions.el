@@ -87,6 +87,7 @@ If N is negative, search forwards for the -Nth following match."
   (c-set-offset 'substatement-open 0))
 
 (defun jv-clojure-mode ()
+  (eldoc-mode 1)
   ;; just re-establishing root binding
   (define-key clojure-mode-map "\C-c," 'shell))
 
