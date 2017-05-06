@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+
+from os import path, walk, rename
+from collections import defaultdict
+import re
+import logging
+
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+
+domove = True
+new_is_low = True
+verbose = False
+
+mypath = "."
+start_index = 2
+separator = "~"
+keyjoiner = "|"
+
+def padding_string(count):
+    # This could be less hard-coded/pedantic, and we might even want to handle three digits
+    if count < (10 - start_index):
+        return '01'
+    elif count < (100 - start_index):
+        return '02'
+    else:
+        return '03'
+
+def get_nonexistent_file(prefix, extension):
+    index = 3
+    name = prefix + separator + str(index) + extension
+    while path.exists(name):
+        index += 1
+        name = prefix + separator + str(index) + extension
+    return name
+
+def timestamp_of(file_info):
+    basename, extension, root, fname = file_info
+    fpath = path.join(root, fname)
+    return path.getmtime(fpath)
+
+def filename_to_key(fname):
+    index_re = '[-~][0-9]+$'
+
+    basename, extension = path.splitext(fname)
+    prefix = re.sub(index_re, '', basename)
+    key = prefix + keyjoiner + extension
+    return key, prefix, extension, fname
+
+def map_by_basic_name(rootdir):
+    filemap = defaultdict(list)
+    for root, subfolders, subfiles in walk(rootdir):
+        for fname in subfiles:
+            key, prefix, extension, fname = filename_to_key(fname)
+            filemap[key].append([prefix, extension, root, fname])
+    return filemap
+
+def make_versioned_file(root, prefix, fmt, extension, offset):
+    if (offset == 0) and ((start_index < 2) or ('-' in prefix)):
+        return path.join(root, prefix + extension)
+    else:
+        version = offset + start_index
+        return path.join(root, prefix + separator + format(version, fmt) + extension)
+
+def build_file_moves(filemap):
+    fmoves = {}
+
+    for key in filemap:
+        index = 0
+        filemap[key].sort(key=timestamp_of, reverse=new_is_low)
+        fmt = padding_string(len(filemap[key]))
+        for val in filemap[key]:
+            prefix, extension, root, fname = val
+            src = path.join(root, fname)
+
+            dest = make_versioned_file(root, prefix, fmt, extension, index)
+            if dest != src:
+                if src not in fmoves:
+                    fmoves[src] = dest
+                else:
+                    logging.info('error: already had move for {0}'.format(src))
+                    # get rid of the old value, too; call things off!
+                    del fmoves[src]
+            elif verbose:
+                logging.info('  - {0} stays as is'.format(src))
+            index += 1
+    return fmoves
+
+def move_file(src, dst):
+    logging.info("moving {0} to {1}".format(src, dst))
+    if domove:
+        rename(src, dst)
+
+def do_easy_moves(allmoves):
+    harder = {}
+
+    for src in allmoves:
+        dest = allmoves[src]
+        if path.exists(dest):
+            logging.info('postponing: {0} -> {1}'.format(src, dest))
+            harder[src] = dest
+        else:
+            move_file(src, dest)
+
+    if verbose:
+        logging.info('{0} out of {1} moves are trickier'.format(len(harder), len(allmoves)))
+    return harder
+
+def do_hard_moves_1(hardmoves):
+    not_done = {}
+
+    for src in hardmoves:
+        dest = hardmoves[src]
+        if path.exists(dest):
+            key, prefix, extension, fname = filename_to_key(dest)
+            temp = get_nonexistent_file(prefix, extension)
+            move_file(src, temp)
+            not_done[temp] = dest
+        else:
+            move_file(src, dest)
+    return not_done
+
+def do_hard_moves(hardmoves):
+    to_do = hardmoves
+    not_done = {}
+
+    while True:
+        not_done = do_hard_moves_1(to_do)
+        if not_done:
+            to_do = not_done
+        else:
+            break
+
+def rename_files():
+    mymap = map_by_basic_name(mypath)
+    moves = build_file_moves(mymap)
+    pass2 = do_easy_moves(moves)
+    do_hard_moves(pass2)
+
+
+rename_files()
