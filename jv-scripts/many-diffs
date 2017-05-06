@@ -65,7 +65,7 @@ do
     done
 done
 
-$sort -nr $logfile
+$sort -n $logfile
 
 # For some sets of files, maybe the total lines might be more important
 # than the number of diffs.  We could get that sort order either by
