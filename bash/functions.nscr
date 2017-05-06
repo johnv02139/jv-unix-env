@@ -40,10 +40,10 @@ alias ds='/bin/ls -l | grep ^d'
 alias subdirs='/bin/ls -ld */* | grep ^d'
 
 # git aliases; need more work...
-alias gadd="git status -s | awk '{print "'$2'"}' | xargs git add"
 alias gst='git status | head -1; git status -s | sort -k 2'
-alias glg='git ls-files | egrep '
-alias unpushed='git log origin/master..master'
+alias cont='git rebase --continue'
+alias abort='git rebase --abort'
+alias skip='git rebase --skip'
 
 alias cf="cd ${JV_ENV_HOME}"
 
@@ -175,20 +175,4 @@ function sgst
     done
     cd ${here}
     unset here
-}
-
-function gtd
-{
-# For shells within emacs... or, really, whenever.  I can pipe through
-# more if I want to... who the hell is git to do it for me?
-    files=$*
-    if [ -z "$files" ]
-    then
-        echo "diffing all modified files below here"
-        files=`git status -s | grep -v '\.\.' | awk '{print $2}'`
-    fi
-    for file in $files
-    do
-        git diff -w $file | tr -d '\015' | cat
-   done
 }
