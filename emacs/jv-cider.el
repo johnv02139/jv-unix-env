@@ -5,6 +5,7 @@
 
 (setq nrepl-repl-buffer-name-template "*repl-cider%s*")
 
+;; cider-repl-wrap-history
 (setq cider-repl-history-size 5000)
 (setq cider-repl-history-file
       (format "%s/.emacs.d/repl-history.txt" homedir))
