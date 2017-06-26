@@ -28,6 +28,15 @@
 (define-key global-map (kbd "M-S-w") 'kill-ring-save)
 (define-key global-map (kbd "M-w") 'kill-ring-save)
 (define-key global-map (kbd "C-w") 'kill-region)
+(define-key global-map (kbd "M-n") 'kill-this-buffer)
+;; (define-key diff-mode-map (kbd "M-n") 'kill-this-buffer)
+
+(defun find-next-file ()
+  (interactive)
+  (dired-next-line 1)
+  (dired-find-file))
+
+;; (define-key dired-mode-map (kbd "M-n") 'find-next-file)
 
 (define-key global-map (kbd "<kp-subtract>") 'clipboard-kill-region)
 (define-key global-map (kbd "<kp-add>") 'clipboard-kill-ring-save)
@@ -48,7 +57,7 @@
 (define-key global-map [f6] 'split-window-vertically)
 (define-key global-map [f7] 'delete-other-windows)
 (define-key global-map [f8] 'bury-buffer)
-(define-key global-map [f9] 'kill-buffer)
+(define-key global-map [f9] 'kill-this-buffer)
 (define-key global-map [f10] 'newline)
 (define-key global-map [f11] 'retop)
 (define-key global-map [f12] 'clear-buffer)
