@@ -44,6 +44,7 @@ alias gst='git status | head -1; git status -s | sort -k 2'
 alias cont='git rebase --continue'
 alias abort='git rebase --abort'
 alias skip='git rebase --skip'
+alias glo='git log --oneline'
 
 alias cf="cd ${JV_ENV_HOME}"
 
