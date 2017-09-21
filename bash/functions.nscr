@@ -40,7 +40,7 @@ alias ds='/bin/ls -l | grep ^d'
 alias subdirs='/bin/ls -ld */* | grep ^d'
 
 # git aliases; need more work...
-alias gst='git status | head -1; git status -s | sort -k 2'
+alias gst='git status | head -2; git status -s | sort -k 2'
 alias cont='git rebase --continue'
 alias abort='git rebase --abort'
 alias skip='git rebase --skip'
