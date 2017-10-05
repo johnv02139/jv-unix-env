@@ -44,7 +44,7 @@ def filename_to_key(fname):
     basename, extension = path.splitext(fname)
     prefix = re.sub(index_re, '', basename)
     key = prefix + keyjoiner + extension
-    return key, prefix, extension, fname
+    return key.lower(), prefix, extension, fname
 
 def map_by_basic_name(rootdir):
     filemap = defaultdict(list)
