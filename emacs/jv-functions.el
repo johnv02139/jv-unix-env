@@ -264,3 +264,26 @@ If N is negative, search forwards for the -Nth following match."
       (setq shell-buffer (current-buffer))
       (shell-mode))
     (pop-to-buffer shell-buffer)))
+
+
+(defvar diff-buff-1 nil)
+(defvar diff-buff-2 nil)
+(defvar orig-diff-buff nil)
+
+(defun do-diffs ()
+  (interactive)
+  (setq orig-diff-buff (current-buffer))
+  (let* ((text (thing-at-point 'line t))
+         (texts (cddr (split-string text))))
+    (setq diff-buff-1 (find-file (car texts)))
+    (setq diff-buff-2 (find-file (cadr texts)))
+    (ediff-buffers diff-buff-1 diff-buff-2)))
+
+(defun no-diffs ()
+  (interactive)
+  (kill-buffer diff-buff-1)
+  (kill-buffer diff-buff-2)
+  (switch-to-buffer orig-diff-buff)
+  (delete-other-windows)
+  (goto-char (point-max))
+  (comint-previous-matching-input "^" 1))
