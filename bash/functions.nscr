@@ -177,3 +177,24 @@ function sgst
     cd ${here}
     unset here
 }
+
+function ol
+{
+    nlines=10
+    if [ -z "$1" ]
+    then
+        echo "Error: ol must receive a filename to show log"
+        return
+    fi
+    if [ -n "$2" ]
+    then
+        nlines=$2
+    fi
+    if [ -n "$3" ]
+    then
+        echo "Error: ol takes at most two arguments"
+        return
+    fi
+    gfile=$1
+    git log --oneline ${gfile} | head -${nlines}
+}
