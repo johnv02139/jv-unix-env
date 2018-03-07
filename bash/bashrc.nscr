@@ -28,7 +28,7 @@ fi
 if [ -z "$JV_ENV_HOME" ]
 then
   echo "Error: you are supposed to set JV_ENV_HOME in ~/.bashrc; trying to continue"
-  export JV_ENV_HOME=${HOME}/Documents/config
+  export JV_ENV_HOME=${HOME}/Documents/VC/config
 fi
 
 # Conversely, the variable JVSCRIPTS really should NOT be set, but I'll allow it
