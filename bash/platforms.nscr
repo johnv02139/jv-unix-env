@@ -24,8 +24,8 @@ fi
 #   be in location.nscr.  For those which have a default, but should be
 #   overridable, put them here.
 
-export EDITOR="/usr/bin/emacs -nw"
-export VISUAL="/usr/bin/emacs -nw"
+export EDITOR="emacsclient"
+export VISUAL="emacsclient"
 export ALTERNATE_EDITOR="/usr/bin/emacs -nw -q"
 
 # Again, the real distinction is Windows vs. non-Windows, but within Windows,
@@ -190,9 +190,15 @@ else
 fi
 
 # Override on demand
-if [ -n "${EMACSHOME}" -a -x "${EMACSHOME}/bin/emacs.exe" ]
+if [ -n "${EMACSHOME}" ]
 then
-  export EDITOR="${EMACSHOME}/bin/emacs.exe -nw"
-  export VISUAL="${EMACSHOME}/bin/emacs.exe -nw"
+  if [ -x "${EMACSHOME}/bin/emacsclient.exe" ]
+  then
+    export EDITOR="${EMACSHOME}/bin/emacsclient.exe"
+    export VISUAL="${EMACSHOME}/bin/emacsclient.exe"
+  else
+    export EDITOR="${EMACSHOME}/bin/emacs.exe -nw"
+    export VISUAL="${EMACSHOME}/bin/emacs.exe -nw"
+  fi
   export ALTERNATE_EDITOR="${EMACSHOME}/bin/emacs.exe -nw -q"
 fi

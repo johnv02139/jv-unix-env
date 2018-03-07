@@ -14,9 +14,9 @@ then
 
   # These variables are used by specific programs
   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home
-  export VISUAL='/usr/bin/emacs'
-  export EDITOR='/usr/bin/emacs'
-  export ALTERNATE_EDITOR='/usr/bin/emacs -q'
+  export EDITOR='emacsclient'
+  export VISUAL='emacsclient'
+  export ALTERNATE_EDITOR='emacs -nw -q'
 
   # These will be picked up and used in path.nscr, if they're set
   export ANT_HOME=/Users/jv/Library/JavaLibs/apache-ant-1.9.6
