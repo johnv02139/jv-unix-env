@@ -38,7 +38,7 @@ that of the namespace in the Clojure source buffer."
     ;; then if necessary we update its namespace
     (when set-namespace
       (cider-repl-set-ns (with-current-buffer buffer (cider-current-ns))))
-    (cider-remember-clojure-buffer buffer)
+    ;; (cider-remember-clojure-buffer buffer)
     (goto-char (point-max))))
 
 ;; TODO: see special-display-buffer-names, maybe it provides a simpler way to customize
