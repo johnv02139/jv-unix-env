@@ -94,7 +94,7 @@ that of the namespace in the Clojure source buffer."
 
 (defun repl-prompt-abbreviated (namespace)
   "Return a prompt string that abbreviates NAMESPACE."
-  (let* ((last-elt (first (last (split-string namespace "\\."))))
+  (let* ((last-elt (car (last (split-string namespace "\\."))))
          (words (split-string last-elt "[_-]"))
          (prompt "> "))
     (dolist (elt (reverse words) prompt)
