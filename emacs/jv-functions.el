@@ -81,9 +81,9 @@ If N is negative, search forwards for the -Nth following match."
   (c-set-style "java")
   (font-lock-mode 1)
   (setq indent-tabs-mode nil)
-  (setq c-basic-offset 4)
+  (setq c-basic-offset 2)
   ;; See comment in jv-setup.el about why these are different
-  (setq tab-width 4)
+  (setq tab-width 2)
   (c-set-offset 'substatement-open 0))
 
 (defun jv-clojure-mode ()
