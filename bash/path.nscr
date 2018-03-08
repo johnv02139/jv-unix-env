@@ -20,6 +20,10 @@ if [ -n "${ANT_HOME}" ]
 then
     ALLPATH=${ANT_HOME}/bin:${ALLPATH}
 fi
+if [ -n "${LEIN_HOME}" ]
+then
+    ALLPATH=${LEIN_HOME}:${ALLPATH}
+fi
 if [ -n "${GOLANG_HOME}" ]
 then
     ALLPATH=${GOLANG_HOME}/bin:${ALLPATH}
