@@ -101,6 +101,9 @@ If N is negative, search forwards for the -Nth following match."
   (set-face-background 'ediff-fine-diff-B "skyblue")
   (set-face-foreground 'ediff-fine-diff-B "black"))
 
+(defun jv-diff-mode ()
+  (define-key diff-mode-map (kbd "M-k") 'bury-buffer))
+
 (defun jv-elisp-mode ()
   (font-lock-mode 1)
   (setq-default tab-width 2))
