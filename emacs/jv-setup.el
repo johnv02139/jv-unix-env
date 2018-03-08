@@ -98,6 +98,7 @@
 (add-hook 'dired-mode-hook         'jv-dired-mode)
 (add-hook 'java-mode-hook          'jv-java-mode)
 (add-hook 'ediff-mode-hook         'jv-ediff-mode)
+(add-hook 'diff-mode-hook          'jv-diff-mode)
 (add-hook 'emacs-lisp-mode-hook    'jv-elisp-mode)
 (add-hook 'lisp-mode-hook          'jv-lisp-mode)
 (add-hook 'inferior-lisp-mode-hook 'jv-inferior-lisp-mode)
