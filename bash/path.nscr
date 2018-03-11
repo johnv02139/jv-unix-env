@@ -14,7 +14,7 @@ ALLPATH=${PATH}
 
 if [ -n "${EMACSHOME}" ]
 then
-    ALLPATH=${EMACSHOME}/bin:${ALLPATH}
+    ALLPATH=${EMACSHOME}/bin:${EMACSHOME}:${ALLPATH}
 fi
 if [ -n "${ANT_HOME}" ]
 then
