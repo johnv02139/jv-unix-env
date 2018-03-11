@@ -147,6 +147,20 @@ if [ "$MACHINE" = "windows" ]; then
     done
     popd > /dev/null 2>&1
   fi
+
+  # Override on demand
+  if [ -n "${EMACSHOME}" ]
+  then
+    if [ -x "${EMACSHOME}/bin/emacsclient.exe" ]
+    then
+      export EDITOR="${EMACSHOME}/bin/emacsclient.exe"
+      export VISUAL="${EMACSHOME}/bin/emacsclient.exe"
+    else
+      export EDITOR="${EMACSHOME}/bin/emacs.exe -nw"
+      export VISUAL="${EMACSHOME}/bin/emacs.exe -nw"
+    fi
+    export ALTERNATE_EDITOR="emacs -nw -q"
+  fi
 fi
 
 # Try to have both variables, TMP and TEMP, set.  If I've apparently
@@ -187,18 +201,4 @@ else
   echo "warning: unable to find valid value for TMP and TEMP; using HOME dir"
   TMP=${HOME}
   TEMP=${HOME}
-fi
-
-# Override on demand
-if [ -n "${EMACSHOME}" ]
-then
-  if [ -x "${EMACSHOME}/bin/emacsclient.exe" ]
-  then
-    export EDITOR="${EMACSHOME}/bin/emacsclient.exe"
-    export VISUAL="${EMACSHOME}/bin/emacsclient.exe"
-  else
-    export EDITOR="${EMACSHOME}/bin/emacs.exe -nw"
-    export VISUAL="${EMACSHOME}/bin/emacs.exe -nw"
-  fi
-  export ALTERNATE_EDITOR="${EMACSHOME}/bin/emacs.exe -nw -q"
 fi
