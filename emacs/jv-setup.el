@@ -133,3 +133,6 @@
   (setq mac-command-modifier 'meta)
   (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
   )
+
+(when (post-24-emacs-p)
+  (server-start))
