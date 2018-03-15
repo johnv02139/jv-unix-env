@@ -73,7 +73,7 @@ If N is negative, search forwards for the -Nth following match."
   (define-key comint-mode-map "\M-\C-l" 'retop))
 
 (defun jv-dired-mode ()
-  (define-key dired-mode-map "b" 'dired-byte-compile-file)
+  (define-key dired-mode-map "c" 'dired-byte-compile-file)
   (define-key dired-mode-map "h" 'dired-find-file-literally)
   (define-key dired-mode-map "\M-k" 'bury-buffer))
 
