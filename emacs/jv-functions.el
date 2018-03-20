@@ -53,6 +53,63 @@ If N is negative, search forwards for the -Nth following match."
    n))
 
 
+;;; Grep
+
+(require 'grep)
+
+(defun find-git-dir ()
+  (file-name-as-directory
+   (expand-file-name
+    default-directory)))
+
+(defun git-grep-expand-template (regexp files)
+  (if (and files (> (length files) 0))
+      (grep-expand-template "/usr/local/bin/git --no-pager grep -n -e <R> -- <F>"
+                            regexp files)
+      (grep-expand-template "/usr/local/bin/git --no-pager grep -n -e <R>" regexp)))
+
+;; Derived from `vc-git-grep', derived from `lgrep'.
+(defun jv-grep (regexp)
+  "Run git grep, searching for REGEXP in default directory."
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (list (grep-read-regexp))))
+  (when (and (stringp regexp) (> (length regexp) 0))
+    (let ((dir (find-git-dir)))
+      (setq command (git-grep-expand-template regexp nil))
+      (add-to-history 'grep-history command)
+      (let ((default-directory dir)
+            (compilation-environment (cons "PAGER=" compilation-environment)))
+        ;; Setting process-setup-function makes exit-message-function work
+        ;; even when async processes aren't supported.
+        (compilation-start command 'grep-mode))
+      (when (eq next-error-last-buffer (current-buffer))
+        (setq default-directory dir)))))
+
+(defun jv-grep-files (regexp files)
+  "Run git grep, searching for REGEXP in FILES in directory DIR."
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (let* ((regexp (grep-read-regexp))
+            (files (grep-read-files regexp)))
+       (list regexp files))))
+  (when (and (stringp regexp) (> (length regexp) 0))
+    (let ((command regexp)
+          (dir (find-git-dir)))
+      (setq command (git-grep-expand-template regexp files))
+      (add-to-history 'grep-history command)
+      (when command
+        (let ((default-directory dir)
+              (compilation-environment (cons "PAGER=" compilation-environment)))
+          ;; Setting process-setup-function makes exit-message-function work
+          ;; even when async processes aren't supported.
+          (compilation-start command 'grep-mode))
+        (if (eq next-error-last-buffer (current-buffer))
+            (setq default-directory dir))))))
+
+
 ;;; Begin mode functions
 
 (defun jv-shell-script-mode ()
@@ -84,6 +141,7 @@ If N is negative, search forwards for the -Nth following match."
   (setq c-basic-offset 2)
   ;; See comment in jv-setup.el about why these are different
   (setq tab-width 2)
+  (define-key java-mode-map (kbd "M-G") 'jv-grep)
   (c-set-offset 'substatement-open 0))
 
 (defun jv-clojure-mode ()
