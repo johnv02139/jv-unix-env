@@ -110,6 +110,7 @@
 
 ;; override
 (define-key global-map "\M-w" 'all-copy)
+(define-key global-map "\M-`" 'list-buffers)
 
 ;; default
 (define-key global-map "\M-w" 'kill-ring-save)
@@ -119,3 +120,5 @@
 ;; caught by the OS, so these bindings won't matter at all.
 (define-key global-map (kbd "C-M-i") 'jv-do-nothing)
 (define-key text-mode-map (kbd "C-M-i") 'jv-do-nothing)
+
+(define-key global-map (kbd "M-G") 'jv-grep)
