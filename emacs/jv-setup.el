@@ -128,6 +128,9 @@
 (when (require 'markdown-mode nil 'noerror)
   (add-to-list 'auto-mode-alist '("\\.md?$" . markdown-mode)))
 
+(defvar scriptsdir (format "%s/jv-scripts" jv-env-home))
+(add-to-list 'exec-path scriptsdir)
+
 (when (eq system-type 'darwin) ;; mac specific settings
   (setq mac-option-modifier 'meta)
   (setq mac-command-modifier 'meta)
