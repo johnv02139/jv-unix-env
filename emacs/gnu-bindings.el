@@ -48,7 +48,6 @@
 (define-key global-map [f3] 'delete-other-windows)
 (define-key global-map [f6] 'kill-buffer)
 (define-key global-map [f7] 'move-line-to-other-buffer)
-(define-key global-map [f9] 'clojure-grep)
 
 (define-key global-map [f2] 'clipboard-kill-ring-save)
 (define-key global-map [f3] 'clipboard-yank)
@@ -57,8 +56,8 @@
 (define-key global-map [f6] 'split-window-vertically)
 (define-key global-map [f7] 'delete-other-windows)
 (define-key global-map [f8] 'bury-buffer)
-(define-key global-map [f9] 'kill-this-buffer)
-(define-key global-map [f10] 'newline)
+(define-key global-map [f9] 'other-frame)
+(define-key global-map [f10] 'other-window)
 (define-key global-map [f11] 'retop)
 (define-key global-map [f12] 'clear-buffer)
 (define-key global-map [M-f12] 'clear-buffer)
@@ -102,8 +101,6 @@
 
 (define-key minibuffer-local-filename-completion-map " " 'minibuffer-complete-word)
 (define-key minibuffer-local-must-match-filename-map " " 'minibuffer-complete-word)
-
-(define-key minibuffer-local-must-match-map [f10] 'minibuffer-complete-and-exit)
 
 (define-key global-map "\C-c," 'shell)
 (define-key global-map "\C-c\C-j" 'switch-to-gdb-buffer)
