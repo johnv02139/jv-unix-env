@@ -198,3 +198,9 @@ function ol
     gfile=$1
     git log --oneline ${gfile} | head -${nlines}
 }
+
+function writable
+{
+  chmod ug+rw $*
+  chflags -R nouchange $*
+}
