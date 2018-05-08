@@ -169,7 +169,6 @@ function sgst
         if [ -d ./.git/. ]
         then
             echo ${pkg}
-            git fetch
             git status -s
         else
             echo "++ ${pkg} not a git repository"
