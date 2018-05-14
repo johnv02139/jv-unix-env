@@ -62,6 +62,10 @@
 (define-key global-map [f12] 'clear-buffer)
 (define-key global-map [M-f12] 'clear-buffer)
 
+(define-key global-map [kp-4] 'previous-error)
+(define-key global-map [kp-5] 'recenter)
+(define-key global-map [kp-6] 'next-error)
+
 ;;; Key bindings I use all the time, but which may be default
 
 (define-key global-map [home] 'beginning-of-buffer)
