@@ -28,7 +28,8 @@
 (define-key global-map (kbd "M-S-w") 'kill-ring-save)
 (define-key global-map (kbd "M-w") 'kill-ring-save)
 (define-key global-map (kbd "C-w") 'kill-region)
-(define-key global-map (kbd "M-n") 'kill-this-buffer)
+(define-key global-map (kbd "M-n") 'recenter)
+;; (define-key global-map (kbd "M-n") 'kill-this-buffer)
 ;; (define-key diff-mode-map (kbd "M-n") 'kill-this-buffer)
 
 (defun find-next-file ()
