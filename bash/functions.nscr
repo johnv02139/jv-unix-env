@@ -45,12 +45,17 @@ alias cont='git `conflict-status` --continue'
 alias abort='git `conflict-status` --abort'
 alias skip='git `conflict-status` --skip'
 alias glo='git log --oneline --reverse'
+alias gloh='git log --oneline --reverse | head -20'
+alias glot='git log --oneline --reverse -n 20'
 
 alias cf="cd ${JV_ENV_HOME}"
 
 alias wndw='echo -n -e "\033]0;Git Bash\a"'
 alias cleen='/bin/rm -f `find . -name "*.pyc"`'
 alias nw='export DISPLAY=""'
+
+alias noserver='emacsclient -e "(server-force-delete)"'
+
 
 export JVFILES=~/Documents/Logs/all-files.log
 alias fff='find ~ -type f > ${JVFILES}'
