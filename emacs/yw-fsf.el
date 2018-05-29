@@ -51,10 +51,10 @@
 (set-face-attribute 'font-lock-variable-name-face        nil :foreground "goldenrod")
 (set-face-attribute 'font-lock-keyword-face              nil :foreground "purple")
 (set-face-attribute 'font-lock-comment-face              nil :foreground "red")
+(set-face-attribute 'font-lock-comment-delimiter-face    nil :foreground "red")
 (set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
 (set-face-attribute 'font-lock-constant-face             nil :foreground "goldenrod")
 (set-face-attribute 'font-lock-type-face                 nil :foreground "darkgreen")
-(set-face-attribute 'font-lock-comment-delimiter-face    nil :foreground "red")
 (set-face-attribute 'font-lock-string-face               nil :foreground "#556b2f")
 (set-face-attribute 'font-lock-builtin-face              nil :foreground "purple")
 ;; preprocessor-face includes java methods in clojure
