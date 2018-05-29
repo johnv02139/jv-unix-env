@@ -47,6 +47,7 @@
 
 ;; Among other things, font-lock-warning-face applies to the close quote in Java mode.
 (set-face-attribute 'font-lock-warning-face              nil :foreground "red")
+(set-face-attribute 'font-lock-function-name-face        nil :foreground "blue")
 (set-face-attribute 'font-lock-comment-face              nil :foreground "red")
 (set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
 (set-face-attribute 'font-lock-keyword-face              nil :foreground "purple")
@@ -55,7 +56,6 @@
 (set-face-attribute 'font-lock-variable-name-face        nil :foreground "goldenrod")
 (set-face-attribute 'font-lock-comment-delimiter-face    nil :foreground "red")
 (set-face-attribute 'font-lock-string-face               nil :foreground "#556b2f")
-(set-face-attribute 'font-lock-function-name-face        nil :foreground "blue")
 (set-face-attribute 'font-lock-builtin-face              nil :foreground "purple")
 ;; preprocessor-face includes java methods in clojure
 (set-face-attribute 'font-lock-preprocessor-face         nil :foreground "blue")
