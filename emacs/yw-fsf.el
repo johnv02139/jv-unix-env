@@ -65,7 +65,8 @@
 ;; preprocessor-face includes java methods in clojure
 (set-face-attribute 'font-lock-preprocessor-face         nil :foreground "blue")
 (set-face-attribute 'font-lock-string-face               nil :foreground "#556b2f")
-(set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
+(set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f"
+                                                             :slant      'italic)
 (set-face-attribute 'font-lock-negation-char-face        nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-backslash nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-construct nil :foreground "red")
