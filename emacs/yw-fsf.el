@@ -55,10 +55,10 @@
 (set-face-attribute 'font-lock-type-face                 nil :foreground "darkgreen")
 (set-face-attribute 'font-lock-constant-face             nil :foreground "goldenrod")
 (set-face-attribute 'font-lock-builtin-face              nil :foreground "purple")
-(set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
-(set-face-attribute 'font-lock-string-face               nil :foreground "#556b2f")
 ;; preprocessor-face includes java methods in clojure
 (set-face-attribute 'font-lock-preprocessor-face         nil :foreground "blue")
+(set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
+(set-face-attribute 'font-lock-string-face               nil :foreground "#556b2f")
 (set-face-attribute 'font-lock-negation-char-face        nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-backslash nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-construct nil :foreground "red")
