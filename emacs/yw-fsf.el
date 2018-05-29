@@ -44,6 +44,10 @@
 ;; black, red, green, blue, magenta, cyan, yellow, white
 
 ;; 'ultra-bold 'extra-bold 'bold 'semi-bold 'normal 'semi-light 'light 'extra-light 'ultra-light
+;; 'italic 'oblique 'normal 'reverse-italic 'reverse-oblique
+
+;; These faces are defined in the order they appear in "Faces for Font Lock"
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Faces-for-Font-Lock.html
 
 ;; Among other things, font-lock-warning-face applies to the close quote in Java mode.
 (set-face-attribute 'font-lock-warning-face              nil :foreground "red")
