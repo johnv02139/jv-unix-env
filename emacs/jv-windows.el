@@ -44,26 +44,40 @@
 ;; black, red, green, blue, magenta, cyan, yellow, white
 
 ;; 'ultra-bold 'extra-bold 'bold 'semi-bold 'normal 'semi-light 'light 'extra-light 'ultra-light
+;; 'italic 'oblique 'normal 'reverse-italic 'reverse-oblique
 
-(set-face-attribute 'font-lock-comment-face              nil :foreground "red")
-(set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
-(set-face-attribute 'font-lock-keyword-face              nil :foreground "purple")
-(set-face-attribute 'font-lock-constant-face             nil :foreground "goldenrod")
-(set-face-attribute 'font-lock-type-face                 nil :foreground "darkgreen")
-(set-face-attribute 'font-lock-variable-name-face        nil :foreground "goldenrod")
+;; These faces are defined in the order they appear in "Faces for Font Lock"
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Faces-for-Font-Lock.html
+
+;; Among other things, font-lock-warning-face applies to the close quote in Java mode.
+(set-face-attribute 'font-lock-warning-face              nil :foreground "red")
+(set-face-attribute 'font-lock-function-name-face        nil :foreground "blue"
+                                                             :weight     'bold)
+(set-face-attribute 'font-lock-variable-name-face        nil :foreground "blue"
+                                                             :weight     'normal)
+(set-face-attribute 'font-lock-keyword-face              nil :foreground "purple"
+                                                             :weight     'bold)
+(set-face-attribute 'font-lock-comment-face              nil :foreground "red"
+                                                             :slant      'italic)
 (set-face-attribute 'font-lock-comment-delimiter-face    nil :foreground "red")
-(set-face-attribute 'font-lock-string-face               nil :foreground "#556b2f")
-(set-face-attribute 'font-lock-function-name-face        nil :foreground "blue")
+(set-face-attribute 'font-lock-type-face                 nil :foreground "#8B5A2B"
+                                                             :weight     'bold)
+(set-face-attribute 'font-lock-constant-face             nil :foreground "goldenrod")
 (set-face-attribute 'font-lock-builtin-face              nil :foreground "purple")
 ;; preprocessor-face includes java methods in clojure
 (set-face-attribute 'font-lock-preprocessor-face         nil :foreground "blue")
+
+;; doesn't seem to have effect
+(set-face-attribute 'font-lock-string-face               nil :foreground "green"
+                                                             :slant      'italic)
+
+(set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f"
+                                                             :slant      'italic)
+
 (set-face-attribute 'font-lock-negation-char-face        nil :foreground "red")
+
 (set-face-attribute 'font-lock-regexp-grouping-backslash nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-construct nil :foreground "red")
-(set-face-attribute 'font-lock-warning-face              nil :foreground "red")
-
-;; Just boldface for function names
-(setq font-lock-function-name-face 'bold)
 
 ;;; `Highlight-prompt-face'  is used to highlight parts of the
 ;;; prompt that deserve attention.
