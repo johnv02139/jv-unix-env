@@ -51,7 +51,8 @@
 
 ;; Among other things, font-lock-warning-face applies to the close quote in Java mode.
 (set-face-attribute 'font-lock-warning-face              nil :foreground "red")
-(set-face-attribute 'font-lock-function-name-face        nil :foreground "blue")
+(set-face-attribute 'font-lock-function-name-face        nil :foreground "blue"
+                                                             :weight     'bold)
 (set-face-attribute 'font-lock-variable-name-face        nil :foreground "goldenrod")
 (set-face-attribute 'font-lock-keyword-face              nil :foreground "purple")
 (set-face-attribute 'font-lock-comment-face              nil :foreground "red"
@@ -67,9 +68,6 @@
 (set-face-attribute 'font-lock-negation-char-face        nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-backslash nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-construct nil :foreground "red")
-
-;; Just boldface for function names
-(setq font-lock-function-name-face 'bold)
 
 ;;; `Highlight-prompt-face'  is used to highlight parts of the
 ;;; prompt that deserve attention.
