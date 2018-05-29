@@ -54,7 +54,8 @@
 (set-face-attribute 'font-lock-function-name-face        nil :foreground "blue"
                                                              :weight     'bold)
 (set-face-attribute 'font-lock-variable-name-face        nil :foreground "goldenrod")
-(set-face-attribute 'font-lock-keyword-face              nil :foreground "purple")
+(set-face-attribute 'font-lock-keyword-face              nil :foreground "purple"
+                                                             :weight     'bold)
 (set-face-attribute 'font-lock-comment-face              nil :foreground "red"
                                                              :slant      'italic)
 (set-face-attribute 'font-lock-comment-delimiter-face    nil :foreground "red")
