@@ -45,6 +45,8 @@
 
 ;; 'ultra-bold 'extra-bold 'bold 'semi-bold 'normal 'semi-light 'light 'extra-light 'ultra-light
 
+;; Among other things, font-lock-warning-face applies to the close quote in Java mode.
+(set-face-attribute 'font-lock-warning-face              nil :foreground "red")
 (set-face-attribute 'font-lock-comment-face              nil :foreground "red")
 (set-face-attribute 'font-lock-doc-face                  nil :foreground "#556b2f")
 (set-face-attribute 'font-lock-keyword-face              nil :foreground "purple")
@@ -60,7 +62,6 @@
 (set-face-attribute 'font-lock-negation-char-face        nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-backslash nil :foreground "red")
 (set-face-attribute 'font-lock-regexp-grouping-construct nil :foreground "red")
-(set-face-attribute 'font-lock-warning-face              nil :foreground "red")
 
 ;; Just boldface for function names
 (setq font-lock-function-name-face 'bold)
