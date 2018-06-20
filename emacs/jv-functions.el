@@ -225,6 +225,14 @@ If N is negative, search forwards for the -Nth following match."
     (while (re-search-forward "[ ]+$" nil t)
       (replace-match "" nil nil))))
 
+(defun copy-and-remove ()
+  (interactive)
+  (let ((current-block
+         (buffer-substring (mark) (point))))
+    (save-excursion
+      (while (search-forward current-block nil t)
+        (replace-match "" nil t)))))
+
 (defun move-line-to-other-buffer ()
   (interactive)
   (let ((kill-whole-line t))
