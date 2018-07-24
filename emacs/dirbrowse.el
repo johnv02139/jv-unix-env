@@ -62,6 +62,7 @@
 
 (add-hook 'dired-mode-hook
           '(lambda ()
+             (define-key dired-mode-map "B" 'start-browse)
              (define-key dired-mode-map "b" 'start-browse)))
 
 (add-hook 'diff-mode-hook
