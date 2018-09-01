@@ -138,7 +138,7 @@ If N is negative, search forwards for the -Nth following match."
   (c-set-style "java")
   (font-lock-mode 1)
   (setq indent-tabs-mode nil)
-  (setq c-basic-offset 2)
+  (setq c-basic-offset 4)
   ;; See comment in jv-setup.el about why these are different
   (setq tab-width 2)
   (define-key java-mode-map (kbd "M-G") 'jv-grep)
