@@ -183,6 +183,17 @@ function sgst
     unset here
 }
 
+function glm
+{
+  rev=HEAD
+  if [ -n "$1" ]
+  then
+    rev=$1
+    shift
+  fi
+  git log --oneline --reverse origin/master..${rev} $*
+}
+
 function ol
 {
     nlines=10
