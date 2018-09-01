@@ -10,7 +10,7 @@
  ;; and connect Cider to it, you need to get the middleware plugged
  ;; in.  The options are to include it in project.clj, or have it
  ;; more prominent in profiles.clj.  This seems like a better option.
- :user {:plugins [[cider/cider-nrepl "0.15.1"]
+ :user {:plugins [[cider/cider-nrepl "0.17.0"]
                   [jonase/eastwood "0.2.3"]]}}
 
 
