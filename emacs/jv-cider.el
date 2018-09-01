@@ -3,9 +3,6 @@
 ;; jv-cider
 ;;
 
-(when (boundp 'jv-cider-directory)
-  (add-to-list 'load-path jv-cider-directory))
-
 (require 'cider)
 
 (setq nrepl-repl-buffer-name-template "*repl-cider%s*")

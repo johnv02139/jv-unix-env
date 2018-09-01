@@ -23,6 +23,3 @@
 (defvar download-jv-packages-p nil)
 
 (load "jv-emacs")
-
-(defvar jv-cider-directory "JVCIDER")
-(load "jv-cider")
