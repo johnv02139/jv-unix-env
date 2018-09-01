@@ -40,9 +40,11 @@ def timestamp_of(file_info):
 
 def filename_to_key(fname):
     index_re = '[-~][0-9]+$'
+    junk_re = '[-~ .]+$'
 
     basename, extension = path.splitext(fname)
     prefix = re.sub(index_re, '', basename)
+    prefix = re.sub(junk_re, '', prefix)
     key = prefix + keyjoiner + extension
     return key.lower(), prefix, extension, fname
 
