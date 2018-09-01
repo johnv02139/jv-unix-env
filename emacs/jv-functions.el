@@ -274,6 +274,22 @@ If N is negative, search forwards for the -Nth following match."
   (interactive)
   (find-file-literally (dired-get-filename)))
 
+(defun buffer-bury-no-cr ()
+  "Bury the buffer listed on this line."
+  (interactive)
+  (let ((buffer (tabulated-list-get-id)))
+    (cond
+     ((null buffer)
+      )
+     (t
+      (bury-buffer buffer)
+      (save-excursion
+        (let ((elt (tabulated-list-delete-entry)))
+          (goto-char (point-max))
+          (apply 'tabulated-list-print-entry elt)))
+      (forward-char 64)
+      (message "Buffer buried.")))))
+
 (defun json-format ()
   (interactive)
   (save-excursion
