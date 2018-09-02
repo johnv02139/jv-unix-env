@@ -25,6 +25,8 @@
 (add-to-list 'default-frame-alist (cons 'height jv-emacs-rows))
 (add-to-list 'default-frame-alist (cons 'width jv-emacs-columns))
 
+(set-background-color "White")
+(set-foreground-color "Black")
 
 ;; Mouse stuff
 
