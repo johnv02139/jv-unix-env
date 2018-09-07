@@ -86,6 +86,13 @@
 (add-hook 'comint-mode-hook        'jv-comint-mode)
 ;(add-hook 'comint-output-filter-functions 'shell-strip-ctrl-m)
 
+;; If this is nil, it means the actual shell process does not echo the input,
+;; and therefore comint will do it.  Comint believes whatever you tell it.
+;; If this gets set to nil, and your shell DOES actually echo back your input,
+;; you'll end up seeing the thing you typed twice.  Setting this to t ensures
+;; that annoyance doesn't happen.
+(setq comint-process-echoes t)
+
 ;; turn on font-lock-mode and set some colors whenever a file is opened
 (add-hook
  'find-file-hooks
