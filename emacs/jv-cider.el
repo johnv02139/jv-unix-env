@@ -54,6 +54,11 @@ that of the namespace in the Clojure source buffer."
 
 (add-hook 'cider-mode-hook 'jv-cider-mode)
 
+(defun jv-clojure-mode ()
+  (eldoc-mode))
+
+(add-hook 'clojure-mode-hook 'jv-clojure-mode)
+
 ;; (require 'cider-history)
 (setq cider-history-show-preview t)
 ; (setq cider-history-quit-action 'quit-window)
