@@ -36,7 +36,14 @@ def get_nonexistent_file(prefix, extension):
 def timestamp_of(file_info):
     basename, extension, root, fname = file_info
     fpath = path.join(root, fname)
-    return path.getmtime(fpath)
+    try:
+        mtime = path.getmtime(fpath)
+    except Exception as e:
+        # TODO: this can happen if fpath is a dead symbolic link
+        # There's probably a way to check that beforehand.
+        # Use os.stat instead of getmtime
+        mtime = 0
+    return mtime
 
 def filename_to_key(fname):
     index_re = '[-~][0-9]+$'
