@@ -112,7 +112,7 @@
 
 ;; override
 (define-key global-map "\M-w" 'all-copy)
-(define-key global-map "\M-`" 'list-buffers)
+(define-key global-map "\M-`" 'other-frame)
 
 ;; default
 (define-key global-map "\M-w" 'kill-ring-save)
