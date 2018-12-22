@@ -73,7 +73,7 @@ function jvgrepx
 
 function ff
 {
-  dir=$1
+  dir=`echo $1 | sed 's,/*$,,g'`
   shift
   find $dir -type f $* | sort
 }
