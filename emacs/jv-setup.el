@@ -91,7 +91,8 @@
 ;; If this gets set to nil, and your shell DOES actually echo back your input,
 ;; you'll end up seeing the thing you typed twice.  Setting this to t ensures
 ;; that annoyance doesn't happen.
-(setq comint-process-echoes t)
+(unless (post-24-emacs-p)
+  (setq comint-process-echoes t))
 
 ;; turn on font-lock-mode and set some colors whenever a file is opened
 (add-hook
