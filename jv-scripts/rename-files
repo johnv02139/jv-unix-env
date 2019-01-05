@@ -113,21 +113,18 @@ def move_file(src, dst):
         rename(src, dst)
 
 def do_easy_moves(allmoves):
-    harder = {}
-
-    sources = allmoves.keys()
+    sources = list(allmoves.keys())
     nmoves = len(sources)
     for src in sources:
         dest = allmoves[src]
         if file_exists(dest):
             logging.info('postponing: {0} -> {1}'.format(src, dest))
-            harder[src] = dest
         else:
             move_file(src, dest)
+            del allmoves[src]
 
     if verbose:
-        logging.info('{0} out of {1} moves are trickier'.format(len(harder), nmoves))
-    return harder
+        logging.info('{0} out of {1} moves are trickier'.format(len(allmoves), nmoves))
 
 def do_hard_moves_1(hardmoves):
     not_done = {}
@@ -159,8 +156,8 @@ def do_hard_moves(hardmoves):
 def rename_files():
     mymap = map_by_basic_name(mypath)
     moves = build_file_moves(mymap)
-    pass2 = do_easy_moves(moves)
-    do_hard_moves(pass2)
+    do_easy_moves(moves)
+    do_hard_moves(moves)
 
 
 rename_files()
