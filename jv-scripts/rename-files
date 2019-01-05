@@ -115,7 +115,9 @@ def move_file(src, dst):
 def do_easy_moves(allmoves):
     harder = {}
 
-    for src in allmoves:
+    sources = allmoves.keys()
+    nmoves = len(sources)
+    for src in sources:
         dest = allmoves[src]
         if file_exists(dest):
             logging.info('postponing: {0} -> {1}'.format(src, dest))
@@ -124,7 +126,7 @@ def do_easy_moves(allmoves):
             move_file(src, dest)
 
     if verbose:
-        logging.info('{0} out of {1} moves are trickier'.format(len(harder), len(allmoves)))
+        logging.info('{0} out of {1} moves are trickier'.format(len(harder), nmoves))
     return harder
 
 def do_hard_moves_1(hardmoves):
