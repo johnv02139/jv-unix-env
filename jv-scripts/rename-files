@@ -59,7 +59,7 @@ def timestamp_of(file_info):
     return mtime
 
 def filename_to_key(fname):
-    index_re = '[-~][0-9]+$'
+    index_re = '[-~][0-9~]+$'
     junk_re = '[-~ .]+$'
 
     basename, extension = path.splitext(fname)
