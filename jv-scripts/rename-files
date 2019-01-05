@@ -7,6 +7,7 @@ import logging
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
+# Setting domove to False does not really work.  See comment in file_exists.
 domove = True
 new_is_low = True
 verbose = False
@@ -25,10 +26,22 @@ def padding_string(count):
     else:
         return '03'
 
+def file_exists(pathname):
+    if domove:
+        does_exist = path.exists(pathname)
+        # could do debug logging here
+        return does_exist
+    else:
+        # TODO!!!  In order to do the "don't actually move, just tell me what
+        # you would do" functionality, we'd need to maintain a data structure
+        # to represent the file system we're creating; and then, this function
+        # would consult that data structure.
+        return False
+
 def get_nonexistent_file(prefix, extension):
     index = 3
     name = prefix + separator + str(index) + extension
-    while path.exists(name):
+    while file_exists(name):
         index += 1
         name = prefix + separator + str(index) + extension
     return name
@@ -104,7 +117,7 @@ def do_easy_moves(allmoves):
 
     for src in allmoves:
         dest = allmoves[src]
-        if path.exists(dest):
+        if file_exists(dest):
             logging.info('postponing: {0} -> {1}'.format(src, dest))
             harder[src] = dest
         else:
@@ -121,7 +134,7 @@ def do_hard_moves_1(hardmoves):
         dest = hardmoves[src]
         if dest.lower() == src.lower():
             logging.info("hard move: {0} already in place".format(dest))
-        elif path.exists(dest):
+        elif file_exists(dest):
             key, prefix, extension, fname = filename_to_key(dest)
             temp = get_nonexistent_file(prefix, extension)
             move_file(src, temp)
