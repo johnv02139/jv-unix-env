@@ -17,7 +17,7 @@ separator = "~"
 keyjoiner = "|"
 
 def padding_string(count):
-    # This could be less hard-coded/pedantic, and we might even want to handle three digits
+    # This could be less hard-coded/pedantic, and we might even want to handle four digits
     if count < (10 - start_index):
         return '01'
     elif count < (100 - start_index):
@@ -82,7 +82,7 @@ def build_file_moves(filemap):
             src = path.join(root, fname)
 
             dest = make_versioned_file(root, prefix, fmt, extension, index)
-            if dest != src:
+            if dest.lower() != src.lower():
                 if src not in fmoves:
                     fmoves[src] = dest
                 else:
@@ -119,7 +119,9 @@ def do_hard_moves_1(hardmoves):
 
     for src in hardmoves:
         dest = hardmoves[src]
-        if path.exists(dest):
+        if dest.lower() == src.lower():
+            logging.info("hard move: {0} already in place".format(dest))
+        elif path.exists(dest):
             key, prefix, extension, fname = filename_to_key(dest)
             temp = get_nonexistent_file(prefix, extension)
             move_file(src, temp)
