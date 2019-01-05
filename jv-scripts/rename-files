@@ -76,12 +76,12 @@ def map_by_basic_name(rootdir):
             filemap[key].append([prefix, extension, root, fname])
     return filemap
 
-def make_versioned_file(root, prefix, fmt, extension, offset):
+def make_versioned_file(prefix, fmt, extension, offset):
     if (offset == 0) and (start_index < 2):
-        return path.join(root, prefix + extension)
+        return prefix + extension
     else:
         version = offset + start_index
-        return path.join(root, prefix + separator + format(version, fmt) + extension)
+        return prefix + separator + format(version, fmt) + extension
 
 def build_file_moves(filemap):
     fmoves = {}
@@ -94,7 +94,8 @@ def build_file_moves(filemap):
             prefix, extension, root, fname = val
             src = path.join(root, fname)
 
-            dest = make_versioned_file(root, prefix, fmt, extension, index)
+            destfile = make_versioned_file(prefix, fmt, extension, index)
+            dest = path.join(root, destfile)
             if dest.lower() != src.lower():
                 if src not in fmoves:
                     fmoves[src] = dest
