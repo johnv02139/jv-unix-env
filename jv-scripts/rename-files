@@ -127,12 +127,16 @@ def do_easy_moves(allmoves):
     sources = list(allmoves.keys())
     nmoves = len(sources)
     for src in sources:
-        dest = allmoves[src][0]
+        moves = allmoves[src]
+        dest = moves[0]
         if file_exists(dest):
             logging.info('postponing: {0} -> {1}'.format(src, dest))
         else:
             move_file(src, dest)
-            del allmoves[src]
+            if (len(moves) == 1) :
+                del allmoves[src]
+            else:
+                del allmoves[src][0]
 
     if verbose:
         logging.info('{0} out of {1} moves are trickier'.format(len(allmoves), nmoves))
