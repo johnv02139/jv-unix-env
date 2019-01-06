@@ -108,7 +108,7 @@ def build_file_moves(filemap):
             src = fileinfo.path
             if dest.lower() != src.lower():
                 if src not in fmoves:
-                    fmoves[src] = dest
+                    fmoves[src] = [dest]
                 else:
                     logging.info('error: already had move for {0}'.format(src))
                     # get rid of the old value, too; call things off!
@@ -127,7 +127,7 @@ def do_easy_moves(allmoves):
     sources = list(allmoves.keys())
     nmoves = len(sources)
     for src in sources:
-        dest = allmoves[src]
+        dest = allmoves[src][0]
         if file_exists(dest):
             logging.info('postponing: {0} -> {1}'.format(src, dest))
         else:
@@ -141,14 +141,14 @@ def do_hard_moves_1(hardmoves):
     not_done = {}
 
     for src in hardmoves:
-        dest = hardmoves[src]
+        dest = hardmoves[src][0]
         if dest.lower() == src.lower():
             logging.info("hard move: {0} already in place".format(dest))
         elif file_exists(dest):
             key, prefix, extension, fname = filename_to_key(dest)
             temp = get_nonexistent_file(prefix, extension)
             move_file(src, temp)
-            not_done[temp] = dest
+            not_done[temp] = [dest]
         else:
             move_file(src, dest)
     return not_done
