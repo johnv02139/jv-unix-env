@@ -17,6 +17,33 @@ start_index = 2
 separator = "~"
 keyjoiner = "|"
 
+class FileInfo:
+    def __init__(self, prefix, extension, root, fname):
+        self.prefix = prefix
+        self.extension = extension
+        self.root = root
+        self.fname = fname
+        self.path = path.join(root, fname)
+        try:
+            self.mtime = path.getmtime(self.path)
+        except Exception as e:
+            # TODO: this can happen if fpath is a dead symbolic link
+            # There's probably a way to check that beforehand.
+            # Use os.stat instead of getmtime
+            self.mtime = 0
+
+    def append_dir(self, fname):
+        return path.join(self.root, fname)
+
+    def make_versioned_file(self, fmt, offset):
+        if (offset == 0) and (start_index < 2):
+            return self.prefix + self.extension
+        else:
+            version = offset + start_index
+            return self.prefix + separator + format(version, fmt) + self.extension
+
+
+
 def padding_string(count):
     # This could be less hard-coded/pedantic, and we might even want to handle four digits
     if count < (10 - start_index):
@@ -47,16 +74,7 @@ def get_nonexistent_file(prefix, extension):
     return name
 
 def timestamp_of(file_info):
-    basename, extension, root, fname = file_info
-    fpath = path.join(root, fname)
-    try:
-        mtime = path.getmtime(fpath)
-    except Exception as e:
-        # TODO: this can happen if fpath is a dead symbolic link
-        # There's probably a way to check that beforehand.
-        # Use os.stat instead of getmtime
-        mtime = 0
-    return mtime
+    return file_info.mtime
 
 def filename_to_key(fname):
     index_re = '[-~][0-9~]+$'
@@ -73,15 +91,8 @@ def map_by_basic_name(rootdir):
     for root, subfolders, subfiles in walk(rootdir):
         for fname in subfiles:
             key, prefix, extension, fname = filename_to_key(fname)
-            filemap[key].append([prefix, extension, root, fname])
+            filemap[key].append(FileInfo(prefix, extension, root, fname))
     return filemap
-
-def make_versioned_file(prefix, fmt, extension, offset):
-    if (offset == 0) and (start_index < 2):
-        return prefix + extension
-    else:
-        version = offset + start_index
-        return prefix + separator + format(version, fmt) + extension
 
 def build_file_moves(filemap):
     fmoves = {}
@@ -90,12 +101,11 @@ def build_file_moves(filemap):
         index = 0
         filemap[key].sort(key=timestamp_of, reverse=new_is_low)
         fmt = padding_string(len(filemap[key]))
-        for val in filemap[key]:
-            prefix, extension, root, fname = val
-            src = path.join(root, fname)
+        for fileinfo in filemap[key]:
+            destfile = fileinfo.make_versioned_file(fmt, index)
+            dest = fileinfo.append_dir(destfile)
 
-            destfile = make_versioned_file(prefix, fmt, extension, index)
-            dest = path.join(root, destfile)
+            src = fileinfo.path
             if dest.lower() != src.lower():
                 if src not in fmoves:
                     fmoves[src] = dest
