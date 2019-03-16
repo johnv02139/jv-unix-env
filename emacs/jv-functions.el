@@ -37,9 +37,9 @@
 With prefix argument N, search for Nth previous match.
 If N is negative, search forwards for the -Nth following match."
   (interactive "p")
+  (setq this-command 'comint-previous-matching-input-from-input)
   ;; (goto-char (point-max))
-  (unless (memq last-command '(better-previous-matching-input-from-input
-                               comint-previous-matching-input-from-input
+  (unless (memq last-command '(comint-previous-matching-input-from-input
                                comint-next-matching-input-from-input))
     ;; Starting a new search
     (setq comint-matching-input-from-input-string
@@ -51,6 +51,15 @@ If N is negative, search forwards for the -Nth following match."
   (comint-previous-matching-input
    (concat "^" (regexp-quote comint-matching-input-from-input-string))
    n))
+
+(defun better-next-matching-input-from-input (n)
+  "Search forwards through input history for match for current input.
+\(Following history elements are more recent commands.)
+With prefix argument N, search for Nth following match.
+If N is negative, search backwards for the -Nth previous match."
+  (interactive "p")
+  (setq this-command 'comint-next-matching-input-from-input)
+  (better-previous-matching-input-from-input (- n)))
 
 
 ;;; Grep
@@ -124,6 +133,8 @@ If N is negative, search forwards for the -Nth following match."
   (define-key comint-mode-map "\C-j" 'comint-send-input)
   (define-key comint-mode-map "\M-p"
     'better-previous-matching-input-from-input)
+  (define-key comint-mode-map "\M-n"
+    'better-next-matching-input-from-input)
   (define-key comint-mode-map "\M-s" 'replace-string)
   (define-key comint-mode-map "\M-\C-l" 'retop))
 
