@@ -314,7 +314,9 @@ If N is negative, search backwards for the -Nth previous match."
 ;; new-shell - doesn't work if shell mode hasn't started yet.
 ;; Should check that, and just call (shell) if not.
 
-(defvar shell-names (list "incoming" "mods" "tools"))
+(defvar shell-names (list "shell" "incoming" "mods" "tools"))
+
+(defvar default-shell-buffer-name (concat "*" (car shell-names) "*"))
 
 (defun unused-comint-buffer-name (basename)
   (if (null (get-buffer (concat "*" basename "*")))
@@ -343,7 +345,7 @@ If N is negative, search backwards for the -Nth previous match."
          (name (file-name-nondirectory prog))
          (startfile (concat "~/.emacs_" name))
          (xargs-name (intern-soft (concat "explicit-" name "-args")))
-         (default-name (unused-comint-buffer-name "shell"))
+         (default-name (unused-comint-buffer-name (car shell-names)))
          (default-values (cons default-name shell-names))
          (supplied-name (read-from-minibuffer
                          (format "Create shell buffer with name (default %s): " default-name)
