@@ -100,15 +100,10 @@
 
 (define-key esc-map "\C-g" 'clojure-grep)
 
-;; on starbuck, at least while running in no-window, the <end> key is seen as
-;; <select>, so map that too.
-(define-key global-map [select] 'end-of-buffer)
-
 (define-key minibuffer-local-filename-completion-map " " 'minibuffer-complete-word)
 (define-key minibuffer-local-must-match-filename-map " " 'minibuffer-complete-word)
 
 (define-key global-map "\C-c," 'shell)
-(define-key global-map "\C-c\C-j" 'switch-to-gdb-buffer)
 
 ;; override
 (define-key global-map "\M-w" 'all-copy)
