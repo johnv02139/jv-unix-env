@@ -24,9 +24,18 @@ fi
 #   be in location.nscr.  For those which have a default, but should be
 #   overridable, put them here.
 
-export EDITOR="emacsclient"
-export VISUAL="emacsclient"
-export ALTERNATE_EDITOR="/usr/bin/emacs -nw -q"
+if [ -z "${EDITOR}" ]
+then
+    export EDITOR=/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_10/emacsclient
+fi
+if [ -z "${VISUAL}" ]
+then
+    export VISUAL=/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_10/emacsclient
+fi
+if [ -z "${ALTERNATE_EDITOR}" ]
+then
+    export VISUAL=/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_10/emacsclient
+fi
 
 # Again, the real distinction is Windows vs. non-Windows, but within Windows,
 # there are three options I've used regularly.
