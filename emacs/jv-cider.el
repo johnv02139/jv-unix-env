@@ -91,7 +91,6 @@ that of the namespace in the Clojure source buffer."
 
 (define-key global-map (kbd "C-c ,") 'shell)
 (define-key global-map [(control c) (control z)] 'cider-switch-to-repl-buffer)
-(define-key shell-mode-map [(control c) (control z)] 'cider-switch-to-repl-buffer)
 
 
 (defun repl-prompt-abbreviated (namespace)

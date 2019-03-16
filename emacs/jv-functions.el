@@ -120,8 +120,6 @@ If N is negative, search forwards for the -Nth following match."
 
 (defun jv-comint-mode ()
   (setq comint-scroll-show-maximum-output nil)
-  ;; (load "next-history-element")
-  (define-key shell-mode-map (kbd "M-p") 'better-previous-matching-input-from-input)
   (define-key comint-mode-map "\C-a" 'comint-bol)
   (define-key comint-mode-map "\C-j" 'comint-send-input)
   (define-key comint-mode-map "\M-p"
