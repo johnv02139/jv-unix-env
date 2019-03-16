@@ -8,7 +8,7 @@
  '(inhibit-startup-screen t)
  '(initial-scratch-message ";; -*- Mode: Lisp-Interaction -*-\n\n\n")
  '(package-selected-packages
-   '(clojure-mode json-mode markdown-mode mustache-mode fsharp-mode))
+   '(clojure-mode json-mode markdown-mode groovy-mode fsharp-mode))
  '(safe-local-variable-values
    (quote
     ((Syntax . COMMON-LISP)
