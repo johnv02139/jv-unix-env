@@ -196,6 +196,9 @@ If N is negative, search backwards for the -Nth previous match."
   (setq require-final-newline nil)
   (setq sgml-basic-offset 2))
 
+(defun jv-css-mode ()
+  (setq css-indent-offset 2))
+
 (defun jv-c-mode ()
   (setq c-default-style "linux")
   (font-lock-mode 1)
