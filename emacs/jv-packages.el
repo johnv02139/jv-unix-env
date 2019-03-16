@@ -15,6 +15,7 @@
 
 (package-initialize)
 
+(require 'shell)
 (require 'ediff)
 (require 'cl)
 (require 'compile)

@@ -311,8 +311,6 @@ If N is negative, search backwards for the -Nth previous match."
   (save-excursion
     (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
 
-;; new-shell - doesn't work if shell mode hasn't started yet.
-;; Should check that, and just call (shell) if not.
 
 (defvar shell-names (list "shell" "incoming" "mods" "tools"))
 
