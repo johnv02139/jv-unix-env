@@ -192,6 +192,10 @@ If N is negative, search backwards for the -Nth previous match."
 (defun jv-inferior-lisp-mode ()
   (define-key lisp-mode-map [(control c) (control k)] 'shell))
 
+(defun jv-html-mode ()
+  (setq require-final-newline nil)
+  (setq sgml-basic-offset 2))
+
 (defun jv-c-mode ()
   (setq c-default-style "linux")
   (font-lock-mode 1)
