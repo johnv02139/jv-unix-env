@@ -316,6 +316,15 @@ If N is negative, search backwards for the -Nth previous match."
 
 (defvar default-shell-buffer-name (concat "*" (car shell-names) "*"))
 
+(defun go-to-shell-buffer (buffer)
+  "Goes to the desired buffer, in the same window, goes to the
+   end of the buffer, and centers the window there."
+  (pop-to-buffer buffer
+                 display-buffer--same-window-action
+                 nil)
+  (goto-char (point-max))
+  (recenter))
+
 (defun unused-comint-buffer-name (basename)
   (if (null (get-buffer (concat "*" basename "*")))
       basename
@@ -364,7 +373,7 @@ If N is negative, search backwards for the -Nth previous match."
                              '("-i"))))
       (setq shell-buffer (current-buffer))
       (shell-mode))
-    (pop-to-buffer shell-buffer)))
+    (go-to-shell-buffer shell-buffer)))
 
 
 (defvar diff-buff-1 nil)
