@@ -105,7 +105,7 @@
 (define-key minibuffer-local-filename-completion-map " " 'minibuffer-complete-word)
 (define-key minibuffer-local-must-match-filename-map " " 'minibuffer-complete-word)
 
-(define-key global-map "\C-c," 'shell)
+(define-key global-map "\C-c," 'my-shell)
 
 ;; override
 (define-key global-map "\M-w" 'all-copy)

@@ -135,6 +135,8 @@ If N is negative, search backwards for the -Nth previous match."
     'better-previous-matching-input-from-input)
   (define-key comint-mode-map "\M-n"
     'better-next-matching-input-from-input)
+  (define-key comint-mode-map (kbd "<return>")
+    'my-comint-send-input)
   (define-key comint-mode-map "\M-s" 'replace-string)
   (define-key comint-mode-map "\M-\C-l" 'retop))
 
@@ -325,6 +327,20 @@ If N is negative, search backwards for the -Nth previous match."
   (goto-char (point-max))
   (recenter))
 
+(defvar shell-stack '())
+
+;; We need this to keep track of when the shells are being used.
+(defun my-comint-send-input (&optional no-newline artificial)
+  "Records the buffer sending the input as the most recent
+   comint buffer used, then continues as normal"
+  (interactive)
+  (let ((current-shell (buffer-name)))
+    (unless (string= current-shell (car shell-stack))
+      (setq shell-stack
+            (cons current-shell
+                  (delete current-shell shell-stack)))))
+  (comint-send-input no-newline artificial))
+
 (defun unused-comint-buffer-name (basename)
   (if (null (get-buffer (concat "*" basename "*")))
       basename
@@ -374,6 +390,16 @@ If N is negative, search backwards for the -Nth previous match."
       (setq shell-buffer (current-buffer))
       (shell-mode))
     (go-to-shell-buffer shell-buffer)))
+
+(defun my-shell ()
+  "Switches the current buffer to the most recently used shell,
+   or a new shell if none is found."
+  (interactive)
+  (let* ((shell-buffer (and shell-stack
+                            (get-buffer (car shell-stack)))))
+    (if shell-buffer
+        (go-to-shell-buffer shell-buffer)
+      (new-shell))))
 
 
 (defvar diff-buff-1 nil)
