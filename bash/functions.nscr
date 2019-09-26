@@ -41,6 +41,8 @@ alias subdirs='/bin/ls -ld */* | grep ^d'
 
 # git aliases; need more work...
 alias gst='git status | head -2; git status -s | sort -k 2'
+alias gup='git fetch --prune && git rebase origin/master master'
+alias gtb='git branch --sort=committerdate'
 alias cont='git `conflict-status` --continue'
 alias abort='git `conflict-status` --abort'
 alias skip='git `conflict-status` --skip'
