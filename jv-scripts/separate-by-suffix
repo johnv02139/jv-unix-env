@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+
+from os import path, rename
+from collections import deque
+import os
+import logging
+
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+
+ignorable = ['.git', '.svn', 'CVS']
+
+def rename_by_suffix(dstroot, rootdir, relpath):
+    reldir, fname = os.path.split(relpath)
+    basename, extension = path.splitext(fname)
+    suffix = 'none'
+    if extension:
+        suffix = extension[1:].lower()
+    dstdir = os.path.join(dstroot, suffix, reldir)
+    if not os.path.exists(dstdir):
+        os.makedirs(dstdir)
+
+    dstpath = os.path.join(dstdir, fname)
+    if os.path.exists(dstpath):
+        logging.error('cannot move, destination exists: {}'
+                      .format(dstpath))
+        return False
+    else:
+        srcpath = os.path.join(rootdir, relpath)
+        logging.debug('  {}'.format(srcpath))
+        try:
+            os.rename(srcpath, dstpath)
+            logging.info('  {}'.format(dstpath))
+            logging.debug('=========')
+            return True
+        except:
+            logging.error('could not rename file "{}"'.format(srcpath))
+            return False
+
+def separate_by_suffix(rootdir):
+    rootparent, x = os.path.split(rootdir)
+    siblingdir = os.path.join(rootparent, 'Suffixes')
+    dirs_to_process = deque()
+    dirs_to_process.append('')
+    files_to_process = []
+    while dirs_to_process:
+        d = dirs_to_process.popleft()
+        absdir = os.path.join(rootdir, d)
+        entries = os.listdir(absdir)
+        emptied = True
+        for entry in entries:
+            relpath = os.path.join(d, entry)
+            if entry in ignorable:
+                emptied = False
+                logging.info('ignoring {}'.format(relpath))
+            else:
+                if os.path.isdir(os.path.join(absdir, entry)):
+                    emptied = False
+                    dirs_to_process.append(relpath)
+                else:
+                    success = rename_by_suffix(siblingdir, rootdir, relpath)
+                    if not success:
+                        emptied = False
+        while emptied:
+            parent, x = os.path.split(absdir)
+            try:
+                os.rmdir(absdir)
+                logging.info('removing directory {}'.format(absdir))
+                remaining = os.listdir(parent)
+                if remaining:
+                    emptied = False
+                else:
+                    absdir = parent
+            except:
+                logging.error('could not remove directory {}'.format(absdir))
+                emptied = False
+
+def run_script():
+    separate_by_suffix(os.path.normpath(os.getcwd()))
+
+run_script()
