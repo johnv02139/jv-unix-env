@@ -52,11 +52,13 @@ def parse_arguments():
                         help="the index to start at for duplicate filenames")
     parser.add_argument("--dir", default=None,
                         help="a directory within the repository you want to use")
+    parser.add_argument("--n", action="store_true", default=False,
+                        help="do not move files, just print what we would do")
     args = parser.parse_args()
     start_index = args.start_index
     if args.dir:
         mypath = args.dir
-        domove = True
+        domove = not args.n
     else:
         domove = False
     return args
