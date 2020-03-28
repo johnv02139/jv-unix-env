@@ -2,6 +2,7 @@
 
 from os import path, walk, rename
 from collections import defaultdict
+import argparse
 import re
 import logging
 
@@ -13,7 +14,7 @@ new_is_low = True
 verbose = False
 
 mypath = "."
-start_index = 2
+start_index = 1
 separator = "~"
 keyjoiner = "|"
 
@@ -42,7 +43,14 @@ class FileInfo:
             version = offset + start_index
             return self.prefix + separator + format(version, fmt) + self.extension
 
-
+def parse_arguments():
+    global start_index
+    parser = argparse.ArgumentParser(description="Rename files in a directory")
+    parser.add_argument("--start-index", type=int, default=1,
+                        help="the index to start at for duplicate filenames")
+    args = parser.parse_args()
+    start_index = args.start_index
+    return args
 
 def padding_string(count):
     # This could be less hard-coded/pedantic, and we might even want to handle four digits
@@ -166,10 +174,10 @@ def do_hard_moves(hardmoves):
         to_do = do_hard_moves_1(to_do)
 
 def rename_files():
+    args = parse_arguments()
     mymap = map_by_basic_name(mypath)
     moves = build_file_moves(mymap)
     hardmoves = do_easy_moves(moves)
     do_hard_moves(hardmoves)
-
 
 rename_files()
