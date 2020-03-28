@@ -18,6 +18,10 @@ start_index = 1
 separator = "~"
 keyjoiner = "|"
 
+index_re = '[-~][0-9~]+$'
+junk_re = '[-~ .]+$'
+substitutions = [[index_re, ''], [junk_re, '']]
+
 moved_away = []
 created_new = []
 
@@ -48,11 +52,14 @@ class FileInfo:
 
 def parse_arguments():
     global start_index
+    global substitutions
     global mypath
     global domove
     parser = argparse.ArgumentParser(description="Rename files in a directory")
     parser.add_argument("--start-index", type=int, default=1,
                         help="the index to start at for duplicate filenames")
+    parser.add_argument("--three-dashes", action="store_true", default=False,
+                        help="replace three dashes with one dash")
     parser.add_argument("--dir", default=None,
                         help="a directory within the repository you want to use")
     parser.add_argument("--n", action="store_true", default=False,
@@ -61,6 +68,8 @@ def parse_arguments():
                         help="actually move files")
     args = parser.parse_args()
     start_index = args.start_index
+    if args.three_dashes:
+        substitutions.append(['---', ' - '])
     if args.dir:
         mypath = args.dir
         domove = not args.n
@@ -96,13 +105,15 @@ def get_nonexistent_file(prefix, extension, dests):
 def timestamp_of(file_info):
     return file_info.mtime
 
-def filename_to_key(fname):
-    index_re = '[-~][0-9~]+$'
-    junk_re = '[-~ .]+$'
+def apply_substitutions(prefix):
+    new_prefix = prefix
+    for substitution in substitutions:
+        new_prefix = re.sub(substitution[0], substitution[1], new_prefix)
+    return new_prefix
 
+def filename_to_key(fname):
     basename, extension = path.splitext(fname)
-    prefix = re.sub(index_re, '', basename)
-    prefix = re.sub(junk_re, '', prefix)
+    prefix = apply_substitutions(basename)
     key = prefix + keyjoiner + extension
     return key.lower(), prefix, extension
 
