@@ -119,9 +119,11 @@ def build_file_moves(filemap):
     return fmoves
 
 def move_file(src, dst):
-    logging.info("moving {0} to {1}".format(src, dst))
     if domove:
+        logging.info("moving {0} to {1}".format(src, dst))
         rename(src, dst)
+    else:
+        logging.info("mv {0}\n      to {1}".format(src, dst))
 
 def do_easy_moves(allmoves):
     sources = list(allmoves.keys())
