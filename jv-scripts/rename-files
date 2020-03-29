@@ -9,7 +9,7 @@ import logging
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
 # Setting domove to False does not really work.  See comment in file_exists.
-domove = True
+domove = False
 new_is_low = True
 verbose = False
 
@@ -45,11 +45,20 @@ class FileInfo:
 
 def parse_arguments():
     global start_index
+    global mypath
+    global domove
     parser = argparse.ArgumentParser(description="Rename files in a directory")
     parser.add_argument("--start-index", type=int, default=1,
                         help="the index to start at for duplicate filenames")
+    parser.add_argument("--dir", default=None,
+                        help="a directory within the repository you want to use")
     args = parser.parse_args()
     start_index = args.start_index
+    if args.dir:
+        mypath = args.dir
+        domove = True
+    else:
+        domove = False
     return args
 
 def padding_string(count):
