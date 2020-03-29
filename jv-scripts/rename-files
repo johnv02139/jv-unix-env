@@ -84,13 +84,13 @@ def filename_to_key(fname):
     prefix = re.sub(index_re, '', basename)
     prefix = re.sub(junk_re, '', prefix)
     key = prefix + keyjoiner + extension
-    return key.lower(), prefix, extension, fname
+    return key.lower(), prefix, extension
 
 def map_by_basic_name(rootdir):
     filemap = defaultdict(list)
     for root, subfolders, subfiles in walk(rootdir):
         for fname in subfiles:
-            key, prefix, extension, fname = filename_to_key(fname)
+            key, prefix, extension = filename_to_key(fname)
             filemap[key].append(FileInfo(prefix, extension, root, fname))
     return filemap
 
@@ -149,7 +149,7 @@ def do_hard_moves_1(hardmoves):
         if dest.lower() == src.lower():
             logging.info("hard move: {0} already in place".format(dest))
         elif file_exists(dest):
-            key, prefix, extension, fname = filename_to_key(dest)
+            key, prefix, extension = filename_to_key(dest)
             temp = get_nonexistent_file(prefix, extension)
             move_file(src, temp)
             not_done[temp] = [dest]
