@@ -65,10 +65,10 @@ def file_exists(pathname):
         # would consult that data structure.
         return False
 
-def get_nonexistent_file(prefix, extension):
+def get_nonexistent_file(prefix, extension, dests):
     index = 3
     name = prefix + separator + str(index) + extension
-    while file_exists(name):
+    while file_exists(name) or name in dests:
         index += 1
         name = prefix + separator + str(index) + extension
     return name
@@ -95,7 +95,7 @@ def map_by_basic_name(rootdir):
     return filemap
 
 def build_file_moves(filemap):
-    fmoves = {}
+    fmoves = []
 
     for key in filemap:
         index = 0
@@ -107,12 +107,7 @@ def build_file_moves(filemap):
 
             src = fileinfo.path
             if dest.lower() != src.lower():
-                if src not in fmoves:
-                    fmoves[src] = [dest]
-                else:
-                    logging.info('error: already had move for {0}'.format(src))
-                    # get rid of the old value, too; call things off!
-                    del fmoves[src]
+                fmoves.append([src, dest])
             elif verbose:
                 logging.info('  - {0} stays as is'.format(src))
             index += 1
@@ -126,55 +121,55 @@ def move_file(src, dst):
         logging.info("mv {0}\n      to {1}".format(src, dst))
 
 def do_easy_moves(allmoves):
-    sources = list(allmoves.keys())
-    nmoves = len(sources)
-    for src in sources:
-        moves = allmoves[src]
-        dest = moves[0]
-        if file_exists(dest):
+    nmoves = len(allmoves)
+    hardmoves = []
+    for move in allmoves:
+        src = move[0]
+        dest = move[1]
+        if dest.lower() == src.lower():
+            logging.info("easy move: {0} already in place".format(dest))
+        elif file_exists(dest):
             logging.info('postponing: {0} -> {1}'.format(src, dest))
+            hardmoves.append(move)
         else:
             move_file(src, dest)
-            if (len(moves) == 1) :
-                del allmoves[src]
-            else:
-                del allmoves[src][0]
 
     if verbose:
         logging.info('{0} out of {1} moves are trickier'.format(len(allmoves), nmoves))
+    return hardmoves
 
 def do_hard_moves_1(hardmoves):
-    not_done = {}
+    next_round = []
 
-    for src in hardmoves:
-        dest = hardmoves[src][0]
+    dests = [x[1] for x in hardmoves]
+    for move in hardmoves:
+        src = move[0]
+        dest = move[1]
         if dest.lower() == src.lower():
             logging.info("hard move: {0} already in place".format(dest))
         elif file_exists(dest):
+            logging.info("can't move: {} -> {}".format(src, dest))
             key, prefix, extension = filename_to_key(dest)
-            temp = get_nonexistent_file(prefix, extension)
+            temp = get_nonexistent_file(prefix, extension, dests)
             move_file(src, temp)
-            not_done[temp] = [dest]
+            logging.debug("moved {} to {}".format(src, temp))
+            logging.debug("later will move {} to {}".format(temp, dest))
+            next_round.append([temp, dest])
         else:
+            logging.debug("hard move: {} -> {} became easy".format(src, dest))
             move_file(src, dest)
-    return not_done
+    return next_round
 
 def do_hard_moves(hardmoves):
     to_do = hardmoves
-    not_done = {}
-
-    while True:
-        not_done = do_hard_moves_1(to_do)
-        if not_done:
-            to_do = not_done
-        else:
-            break
+    while to_do:
+        to_do = do_hard_moves_1(to_do)
 
 def rename_files():
     mymap = map_by_basic_name(mypath)
     moves = build_file_moves(mymap)
-    do_easy_moves(moves)
-    do_hard_moves(moves)
+    hardmoves = do_easy_moves(moves)
+    do_hard_moves(hardmoves)
 
 
 rename_files()
