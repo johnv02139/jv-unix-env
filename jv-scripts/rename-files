@@ -18,6 +18,9 @@ start_index = 1
 separator = "~"
 keyjoiner = "|"
 
+moved_away = []
+created_new = []
+
 class FileInfo:
     def __init__(self, prefix, extension, root, fname):
         self.prefix = prefix
@@ -73,16 +76,12 @@ def padding_string(count):
         return '03'
 
 def file_exists(pathname):
-    if domove:
-        does_exist = path.exists(pathname)
-        # could do debug logging here
-        return does_exist
-    else:
-        # TODO!!!  In order to do the "don't actually move, just tell me what
-        # you would do" functionality, we'd need to maintain a data structure
-        # to represent the file system we're creating; and then, this function
-        # would consult that data structure.
+    global moved_away, created_new
+    if pathname in moved_away:
         return False
+    if pathname in created_new:
+        return True
+    return path.exists(pathname)
 
 def get_nonexistent_file(prefix, extension, dests):
     index = 3
@@ -133,10 +132,13 @@ def build_file_moves(filemap):
     return fmoves
 
 def move_file(src, dst):
+    global moved_away, created_new
     if domove:
         logging.info("moving {0} to {1}".format(src, dst))
         rename(src, dst)
     else:
+        moved_away.append(src)
+        created_new.append(dst)
         logging.info("mv {0}\n      to {1}".format(src, dst))
 
 def do_easy_moves(allmoves):
