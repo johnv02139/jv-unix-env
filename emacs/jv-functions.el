@@ -452,3 +452,8 @@ If N is negative, search backwards for the -Nth previous match."
   (delete-other-windows)
   (goto-char (point-max))
   (comint-previous-matching-input "^" 1))
+
+(defun compile-goto-error-no-select (&optional event)
+  (interactive "p")
+  (compile-goto-error event)
+  (pop-to-buffer next-error-last-buffer))
