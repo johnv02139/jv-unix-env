@@ -73,9 +73,9 @@ If N is negative, search backwards for the -Nth previous match."
 
 (defun git-grep-expand-template (regexp files)
   (if (and files (> (length files) 0))
-      (grep-expand-template "/usr/local/bin/git --no-pager grep -n -e <R> -- <F>"
+      (grep-expand-template "/usr/bin/git --no-pager grep -n -e <R> -- <F>"
                             regexp files)
-      (grep-expand-template "/usr/local/bin/git --no-pager grep -n -e <R>" regexp)))
+      (grep-expand-template "/usr/bin/git --no-pager grep -n -e <R>" regexp)))
 
 ;; Derived from `vc-git-grep', derived from `lgrep'.
 (defun jv-grep (regexp)
