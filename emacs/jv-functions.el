@@ -396,6 +396,30 @@ If N is negative, search backwards for the -Nth previous match."
       (shell-mode))
     (go-to-shell-buffer shell-buffer)))
 
+(defun new-named-shell (supplied-name)
+  (let* ((prog (or (and (boundp 'explicit-shell-file-name)
+                        (symbol-value 'explicit-shell-file-name))
+                   (getenv "ESHELL")
+                   (getenv "SHELL")
+                   "/bin/sh"))
+         (name (file-name-nondirectory prog))
+         (startfile (concat "~/.emacs_" name))
+         (xargs-name (intern-soft (concat "explicit-" name "-args")))
+         (default-name (unused-comint-buffer-name (car shell-names)))
+         (default-values (cons default-name shell-names))
+         (buffer-name (if (> (length supplied-name) 0) supplied-name default-name))
+         shell-buffer)
+    (setq shell-names (delete buffer-name shell-names))
+    (save-excursion
+      (set-buffer (apply 'make-comint buffer-name prog
+                         (if (file-exists-p startfile) startfile)
+                         (if (and xargs-name (boundp xargs-name))
+                             (symbol-value xargs-name)
+                             '("-i"))))
+      (setq shell-buffer (current-buffer))
+      (shell-mode))
+    (go-to-shell-buffer shell-buffer)))
+
 (defun my-shell ()
   "Switches the current buffer to the most recently used shell,
    or a new shell if none is found."
