@@ -129,6 +129,7 @@
 (add-to-list 'auto-mode-alist '("\\.jsp$"   . html-mode))
 (add-to-list 'auto-mode-alist '("\\.aspx$"  . html-mode))
 (add-to-list 'auto-mode-alist '("\\.rhtml$" . html-mode))
+(add-to-list 'auto-mode-alist '("\\.ts$"    . javscript-mode))
 
 (when (require 'cloure-mode nil 'noerror)
   (add-hook 'clojure-mode-hook 'jv-clojure-mode)
