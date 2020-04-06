@@ -40,7 +40,6 @@ alias ds='/bin/ls -l | grep ^d'
 alias subdirs='/bin/ls -ld */* | grep ^d'
 
 # git aliases; need more work...
-alias gst='git status | head -2; git status -s | sort -k 2'
 alias gup='git fetch --prune && git rebase origin/master master'
 alias gtb='git branch --sort=committerdate'
 alias cont='git `conflict-status` --continue'
@@ -164,6 +163,18 @@ function upcd
     # as it does when we cd into a directory stored in a variable
     unset orig
     unset sfile
+}
+
+function gst
+{
+  sandbox=`git rev-parse --show-toplevel 2>/dev/null`
+  if [ -n "${sandbox}" ]
+  then
+    git status | head -2
+    git status -s | sort -k 2
+  else
+    /bin/ls -AF
+  fi
 }
 
 # Get git status for each directory in the working directory
