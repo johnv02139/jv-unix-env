@@ -123,3 +123,5 @@
 (define-key text-mode-map (kbd "C-M-i") 'jv-do-nothing)
 
 (define-key global-map (kbd "M-G") 'jv-grep)
+
+;; (define-key grep-mode-map (kbd "f") 'compile-goto-error-no-select)
