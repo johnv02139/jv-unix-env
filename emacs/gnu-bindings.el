@@ -32,6 +32,8 @@
 ;; (define-key global-map (kbd "M-n") 'kill-this-buffer)
 ;; (define-key diff-mode-map (kbd "M-n") 'kill-this-buffer)
 
+(define-key global-map (kbd "<mouse-3>") 'mouse-yank-at-click)
+
 (defun find-next-file ()
   (interactive)
   (dired-next-line 1)
