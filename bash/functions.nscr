@@ -233,3 +233,13 @@ function writable
   chmod ug+rw $*
   chflags -R nouchange $*
 }
+
+function jsfiles
+{
+  find . -type f | egrep -v '\.git' | egrep -v '/test/' | egrep -v '/dist/'
+}
+
+function jsgrep
+{
+  find . -type f | egrep -v '\.git' | egrep -v '/test/' | egrep -v '/dist/' | xargs egrep $*
+}
