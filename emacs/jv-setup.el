@@ -113,6 +113,7 @@
 (add-hook 'c-mode-hook             'jv-c-mode)
 (add-hook 'c++-mode-hook           'jv-c-mode)
 (add-hook 'c++-mode-hook           'jv-c++-mode)
+(add-hook 'js-mode-hook            'jv-js-mode)
 (add-hook 'html-mode-hook          'jv-html-mode)
 (add-hook 'css-mode-hook           'jv-css-mode)
 

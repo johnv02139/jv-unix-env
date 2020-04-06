@@ -201,6 +201,11 @@ If N is negative, search backwards for the -Nth previous match."
 (defun jv-css-mode ()
   (setq css-indent-offset 2))
 
+(defun jv-js-mode ()
+  (setq require-final-newline nil)
+  (setq mode-require-final-newline nil)
+  (setq js-indent-level 2))
+
 (defun jv-c-mode ()
   (setq c-default-style "linux")
   (font-lock-mode 1)
