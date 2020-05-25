@@ -143,6 +143,11 @@ function gtd
    done
 }
 
+function mvntest
+{
+  mvn -Dtest=${1} test
+}
+
 function cntslash
 {
   awk -F/ '{print NF " " $0}' | sort -n
