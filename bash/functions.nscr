@@ -30,7 +30,7 @@ alias ls='/bin/ls -AF'
 alias lt='/bin/ls -lt'
 alias ltr='/bin/ls -ltr'
 alias ll='/bin/ls -ln'
-alias l='/bin/ls -lat | more'
+alias l='/bin/ls -lAt'
 alias s='/bin/ls' # for when I accidentally type ;s instead of ls
 alias lsdirs="/bin/ls -l | grep ^d | awk '{print "'$NF'"}'"
 alias files="/bin/ls -l | grep='^-' | awk '{print "'$NF'"}'"
