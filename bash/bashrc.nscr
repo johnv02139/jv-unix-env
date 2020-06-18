@@ -77,7 +77,7 @@ export LANG="C"
 # and lower-case instead, which I do above, for environment variables.  I can
 # hardcode them into the prompt here.
 
-export PS1="$bashuser:$hostname:\w:\!$ "
+export PS1="$hostname:\w:\!$ "
 
 . ${JV_ENV_HOME}/bash/functions.nscr
 
