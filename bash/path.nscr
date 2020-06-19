@@ -52,9 +52,17 @@ if [ -n "${JAVA_HOME}" ]
 then
     ALLPATH=${JAVA_HOME}/bin:${ALLPATH}
 fi
+if [ -n "${JDK11HOME}" ]
+then
+    ALLPATH=${ALLPATH}:${JDK11HOME}/bin
+fi
 if [ -d /usr/local/bin ]
 then
     ALLPATH=/usr/local/bin:${ALLPATH}
+fi
+if [ -z "$ZING_HOME" ]
+then
+    ALLPATH=${ZING_HOME}/zing:${ZING_HOME}/bin:${ALLPATH}
 fi
 
 # Packages like Java and Emacs tend to have their executables installed into
