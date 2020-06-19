@@ -50,6 +50,9 @@ alias glot='git log --oneline --reverse -n 20'
 
 alias cleen='/bin/rm -f `find . -name "*.pyc"`'
 
+######################################################################
+# FileUtils Aliases
+######################################################################
 alias rd='jfu rd'
 alias ss='jfu ss'
 alias md='jfu md'
