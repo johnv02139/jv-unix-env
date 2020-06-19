@@ -46,17 +46,20 @@ alias cont='git `conflict-status` --continue'
 alias abort='git `conflict-status` --abort'
 alias skip='git `conflict-status` --skip'
 alias glo='git log --oneline --reverse'
-alias gloh='git log --oneline --reverse | head -20'
 alias glot='git log --oneline --reverse -n 20'
 
-alias cf="cd ${JV_ENV_HOME}"
-
-alias wndw='echo -n -e "\033]0;Git Bash\a"'
 alias cleen='/bin/rm -f `find . -name "*.pyc"`'
-alias nw='export DISPLAY=""'
 
-alias noserver='emacsclient -e "(server-force-delete)"'
-
+alias rd='jfu rd'
+alias ss='jfu ss'
+alias md='jfu md'
+alias is='jfu is'
+alias st='jfu st'
+alias nlfs='jfu nlfs'
+alias dsc='jfu dsc'
+alias cfg='jfu cfg'
+alias cn='jfu cn'
+alias ascs='jfu ascs'
 
 export JVFILES=~/Documents/Logs/all-files.log
 alias fff='find ~ -type f > ${JVFILES}'
@@ -77,92 +80,6 @@ function ff
   dir=`echo $1 | sed 's,/*$,,g'`
   shift
   find $dir -type f $* | sort
-}
-
-function filegrep
-{
-  sdir=$1
-  flist=$2
-  shift
-  shift
-  cd $sdir
-  egrep $* `cat $flist`
-}
-
-function countlines
-{
-  sort | uniq -c | sort -n
-}
-
-function countg
-{
-  egrep -c $* | awk -F: '{printf("%s %s\n", $2, $1)}' | grep -v '^0'
-}
-
-function getsuf
-{
-  awk -F/ '{print $NF}' | awk -F. '{if (NF > 1) print $NF}'
-}
-
-function cntsuf
-{
-  getsuf | countlines
-}
-
-function cntisuf
-{
-  getsuf | tr '[A-Z]' '[a-z]' | countlines
-}
-
-function cntslash
-{
-  awk -F/ '{print NF " " $0}' | sort -n
-}
-
-function weirdsuf
-{
-  getsuf | grep -v '^[a-zA-Z0-9]*~*$' | grep -v ',v$' | sort | uniq | lens | sort -nr
-}
-
-function odiff
-{
-    diff $2 $1/$2
-}
-
-function jsonize
-{
-    cat $1 | python -mjson.tool
-}
-
-# upcd - go up (i.e., chdir) the directory hierarchy until finding the specified file
-function upcd
-{
-    if [ -z "$1" ]
-    then
-        echo "Error: upcd must receive a filename to look for"
-        return
-    fi
-    if [ -n "$2" ]
-    then
-        echo "Error: upcd takes only one argument, a filename to look for"
-        return
-    fi
-    sfile=$1
-    orig=${PWD}
-    while [ ! -f ./${sfile} ]
-    do
-        if [ "/" = ${PWD} ]
-        then
-            echo "Could not locate ${sfile} in any parent directory of ${orig}"
-            cd $orig
-            break
-        fi
-        cd ..
-    done
-    # The unset is so that zsh doesn't "helpfully" change the prompt
-    # as it does when we cd into a directory stored in a variable
-    unset orig
-    unset sfile
 }
 
 function gst
@@ -207,39 +124,38 @@ function glm
   git log --oneline --reverse origin/master..${rev} $*
 }
 
-function ol
+function gtd
 {
-    nlines=10
-    if [ -z "$1" ]
+# For shells within emacs... or, really, whenever.  I can pipe through
+# more if I want to... who the hell is git to do it for me?
+    files=$*
+    if [ -z "$files" ]
     then
-        echo "Error: ol must receive a filename to show log"
-        return
+        echo "diffing all modified files below here"
+        files=`git status -s | grep -v '\.\.' | awk '{print $2}'`
     fi
-    if [ -n "$2" ]
-    then
-        nlines=$2
-    fi
-    if [ -n "$3" ]
-    then
-        echo "Error: ol takes at most two arguments"
-        return
-    fi
-    gfile=$1
-    git log --oneline ${gfile} | head -${nlines}
+    for file in $files
+    do
+        git diff -w $file | tr -d '\015' | cat
+   done
 }
 
-function writable
+function cntslash
 {
-  chmod ug+rw $*
-  chflags -R nouchange $*
+  awk -F/ '{print NF " " $0}' | sort -n
 }
 
-function jsfiles
+function jsonize
 {
-  find . -type f | egrep -v '\.git' | egrep -v '/test/' | egrep -v '/dist/'
+    cat $1 | python -mjson.tool
 }
 
-function jsgrep
+function getsuf
 {
-  find . -type f | egrep -v '\.git' | egrep -v '/test/' | egrep -v '/dist/' | xargs egrep $*
+  awk -F/ '{print $NF}' | awk -F. '{if (NF > 1) print $NF}'
+}
+
+function cntsuf
+{
+  getsuf | countlines
 }
