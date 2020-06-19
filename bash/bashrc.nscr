@@ -56,6 +56,12 @@ fi
 # Now make sure we only use the part after a backslash, if any
 bashuser=${bashuser##*\\}
 
+# Some default environment variables
+export MODS_DIR=${HOME}/Documents/Mods
+export SW_DIR=${HOME}/Downloads/Software
+export VCDIR=${HOME}/Documents/VC
+export EXTRA_CONFIG=${VCDIR}/config
+
 # location.nscr is a non-checked-in file that allows you to specify machine-specific
 # overrides to environment variables
 if [ -f ${JV_ENV_HOME}/bash/location.nscr ]
