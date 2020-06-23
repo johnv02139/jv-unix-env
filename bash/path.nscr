@@ -48,6 +48,14 @@ if [ -n "${ANDROID_TOOLS}" ]
 then
     ALLPATH=${ANDROID_TOOLS}:${ALLPATH}
 fi
+if [ -n "${ZING_HOME}" ]
+then
+    ALLPATH=${ZING_HOME}/zing:${ZING_HOME}/bin:${ALLPATH}
+fi
+if [ -n "${PYENV_ROOT}" ]
+then
+  ALLPATH=${PYENV_ROOT}/bin:${ALLPATH}
+fi
 if [ -n "${JAVA_HOME}" ]
 then
     ALLPATH=${JAVA_HOME}/bin:${ALLPATH}
