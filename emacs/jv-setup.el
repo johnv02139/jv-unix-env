@@ -114,6 +114,7 @@
 (add-hook 'c++-mode-hook           'jv-c-mode)
 (add-hook 'c++-mode-hook           'jv-c++-mode)
 (add-hook 'js-mode-hook            'jv-js-mode)
+(add-hook 'js2-mode-hook           'jv-js-mode)
 (add-hook 'html-mode-hook          'jv-html-mode)
 (add-hook 'css-mode-hook           'jv-css-mode)
 
@@ -126,6 +127,7 @@
 (add-to-list 'auto-mode-alist '("\\.hxx$"   . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.m$"     . objc-mode))
 
+(add-to-list 'auto-mode-alist '("\\.js$"    . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp$"   . html-mode))
 (add-to-list 'auto-mode-alist '("\\.aspx$"  . html-mode))
 (add-to-list 'auto-mode-alist '("\\.rhtml$" . html-mode))
