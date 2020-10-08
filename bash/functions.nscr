@@ -167,3 +167,11 @@ function cntsuf
 {
   getsuf | countlines
 }
+
+function jdk11
+{
+  export PATH=`echo ${PATH} | sed "s,:${JAVAHOME}/bin,,g"`
+  export JAVA_HOME=${JDK11HOME}
+  export JAVAHOME=${JDK11HOME}
+  export PATH=${JDK11HOME}/bin:${PATH}
+}
