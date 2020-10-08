@@ -163,6 +163,11 @@ function getsuf
   awk -F/ '{print $NF}' | awk -F. '{if (NF > 1) print $NF}'
 }
 
+function psport
+{
+  lsof -nP -iTCP:$1
+}
+
 function cntsuf
 {
   getsuf | countlines
