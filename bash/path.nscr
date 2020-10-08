@@ -87,7 +87,7 @@ else
   CPSEP=":"
 fi
 
-homebin=${HOME}/bin/${MACHINE}
+homebin=${HOME}/Downloads/bin
 if [ -d "${homebin}" ]
 then
   ALLPATH=${ALLPATH}:${homebin}
