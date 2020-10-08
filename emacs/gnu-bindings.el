@@ -127,3 +127,6 @@
 ;; (define-key grep-mode-map (kbd "f") 'compile-goto-error-no-select)
 
 ;; (define-key shell-mode-map (kbd "C-x d") 'do-diffs)
+
+(define-key global-map (kbd "M-<up>") 'scroll-down-command)
+(define-key global-map (kbd "M-<down>") 'scroll-up-command)
