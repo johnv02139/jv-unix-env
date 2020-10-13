@@ -457,3 +457,7 @@ If N is negative, search backwards for the -Nth previous match."
   (interactive "p")
   (compile-goto-error event)
   (pop-to-buffer next-error-last-buffer))
+
+(defun find-file-if-exists (f)
+  (if (file-exists-p f)
+      (find-file f)))
