@@ -18,6 +18,11 @@
 
 (package-initialize)
 
+;; If there is a problem installing, can try the following:
+;; (package-refresh-contents)
+;; But this takes a very long time, so definitely don't want
+;; to do it upon normal load.
+
 (require 'shell)
 (require 'ediff)
 (require 'compile)
