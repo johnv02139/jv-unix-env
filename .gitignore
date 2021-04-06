@@ -1,7 +1,7 @@
-
 /bash/location.nscr
 /bash/extra.nscr
 /bash/secrets.nscr
+/zsh/secrets.zsh
 /emacs/jv-before.el
 /emacs/jv-after.el
 /commit.log
