@@ -115,6 +115,7 @@
 (add-hook 'c++-mode-hook           'jv-c++-mode)
 (add-hook 'js-mode-hook            'jv-js-mode)
 (add-hook 'js2-mode-hook           'jv-js-mode)
+(add-hook 'typescript-mode-hook    'jv-typescript-mode)
 (add-hook 'html-mode-hook          'jv-html-mode)
 (add-hook 'css-mode-hook           'jv-css-mode)
 
@@ -128,10 +129,11 @@
 (add-to-list 'auto-mode-alist '("\\.m$"     . objc-mode))
 
 (add-to-list 'auto-mode-alist '("\\.js$"    . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.ts$"    . typescript-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$"   . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp$"   . html-mode))
 (add-to-list 'auto-mode-alist '("\\.aspx$"  . html-mode))
 (add-to-list 'auto-mode-alist '("\\.rhtml$" . html-mode))
-(add-to-list 'auto-mode-alist '("\\.ts$"    . javscript-mode))
 
 (when (require 'cloure-mode nil 'noerror)
   (add-hook 'clojure-mode-hook 'jv-clojure-mode)
