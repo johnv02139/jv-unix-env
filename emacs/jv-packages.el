@@ -7,7 +7,7 @@
 (if (not (boundp 'download-jv-packages-p))
   (defvar download-jv-packages-p t))
 
-(defvar my-packages '(js2-mode clojure-mode markdown-mode))
+(defvar my-packages '(typescript-mode js2-mode clojure-mode markdown-mode))
 ;; omit cider, for development
 
 (require 'package)
