@@ -1,6 +1,6 @@
 ;; -*- Mode: Emacs-Lisp -*-
 
-;; This is an example .emacs file.  Copy it to ~/.emacs.d/init.el (or .emacs)
+;; This is an example .emacs file.  Copy it to ~/.emacs.d/init.el
 ;; and edit it to the config home you want to use.
 
 ;; The all-caps string below is meant to allow easy substitution via sed.
