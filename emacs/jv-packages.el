@@ -17,7 +17,6 @@
 
 (require 'shell)
 (require 'ediff)
-(require 'cl)
 (require 'compile)
 (require 'font-lock)
 
