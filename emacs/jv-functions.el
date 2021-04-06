@@ -206,6 +206,11 @@ If N is negative, search backwards for the -Nth previous match."
   (setq mode-require-final-newline nil)
   (setq js-indent-level 2))
 
+(defun jv-typescript-mode ()
+  (setq indent-tabs-mode t)
+  (setq typescript-indent-level 2)
+  (setq require-final-newline t))
+
 (defun jv-c-mode ()
   (setq c-default-style "linux")
   (font-lock-mode 1)
