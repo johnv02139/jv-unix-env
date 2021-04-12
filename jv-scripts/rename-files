@@ -4,6 +4,7 @@ from os import path, walk, rename
 from collections import defaultdict
 import argparse
 import re
+import sys
 import logging
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
@@ -208,5 +209,7 @@ def rename_files():
     moves = build_file_moves(mymap)
     hardmoves = do_easy_moves(moves)
     do_hard_moves(hardmoves)
+    return 0
 
-rename_files()
+if __name__ == '__main__':
+    sys.exit(rename_files())
