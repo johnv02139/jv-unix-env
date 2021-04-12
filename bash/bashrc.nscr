@@ -58,8 +58,9 @@ bashuser=${bashuser##*\\}
 
 # Some default environment variables
 export MODS_DIR=${HOME}/Documents/Mods
-export SW_DIR=${HOME}/Downloads/Software
+export LOGS_DIR=${HOME}/Documents/Logs
 export VCDIR=${HOME}/Documents/VC
+export SW_DIR=${HOME}/Downloads/Software
 export EXTRA_CONFIG=${VCDIR}/config
 
 # location.nscr is a non-checked-in file that allows you to specify machine-specific
@@ -73,7 +74,7 @@ fi
 . ${JV_ENV_HOME}/bash/path.nscr
 
 # My platform-independent environment variables; shockingly few of them...
-export HISTFILE="${TMP}/${bashuser}-hist.log"
+export HISTFILE="${LOGS_DIR}/${bashuser}-hist.log"
 export LANG="C"
 
 # Bash generally knows about users and hostnames, and supports \u and \h.
