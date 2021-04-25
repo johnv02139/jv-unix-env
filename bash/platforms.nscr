@@ -26,15 +26,15 @@ fi
 
 if [ -z "${EDITOR}" ]
 then
-    export EDITOR=/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_10/emacsclient
+    export EDITOR=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
 fi
 if [ -z "${VISUAL}" ]
 then
-    export VISUAL=/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_10/emacsclient
+    export VISUAL=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
 fi
 if [ -z "${ALTERNATE_EDITOR}" ]
 then
-    export VISUAL=/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_10/emacsclient
+    export VISUAL=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
 fi
 
 # Again, the real distinction is Windows vs. non-Windows, but within Windows,
